@@ -12,21 +12,15 @@ export class CharsService {
     return `This action returns all chars`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} char`;
   }
-  findByName(charName: string) {
-    return `This action returns a #${charName} char`;
-  }
-  findByServ(serv: string) {
-    return `This action returns a #${serv} char`;
-  }
 
-  update(id: number, updateCharDto: UpdateCharDto) {
+  update(id: string, updateCharDto: UpdateCharDto) {
     return `This action updates a #${id} char`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} char`;
   }
 }

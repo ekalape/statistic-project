@@ -19,27 +19,17 @@ export class CharsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.charsService.findOne(+id);
-  }
-
-  @Get(':charName')
-  findByName(@Param('charName') charName: string) {
-    return this.charsService.findByName(charName);
-  }
-
-  @Get(':serv')
-  findByServ(@Param('charName') serv: string) {
-    return this.charsService.findByServ(serv);
+    return this.charsService.findOne(id);
   }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateCharDto: UpdateCharDto) {
-    return this.charsService.update(+id, updateCharDto);
+    return this.charsService.update(id, updateCharDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.charsService.remove(+id);
+    return this.charsService.remove(id);
   }
 
 
