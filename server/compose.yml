@@ -1,0 +1,51 @@
+services:
+  wowapi:
+    container_name: wowapi
+    build: 
+      dockerfile: Dockerfile
+      context: .
+    image: wowapi-image
+    depends_on: 
+      - pgs-db
+    restart: unless-stopped
+    volumes: 
+      - ./src:/wowapi/src
+      - ./node_modules:/wowapi/node_modules
+    command: npm run start:dev
+    expose: 
+      - ${APP_PORT}
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    networks:
+      - wowapi-network
+
+  pgs-db:
+    container_name: pgs-db
+    build:
+      dockerfile: Dockerfile.psg
+      context: .
+    image: postgres:15.4-alpine3.17
+    restart: unless-stopped
+    expose:
+      - ${DB_PORT}
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    networks:
+      - wowapi-network
+
+
+networks:
+  wowapi-network:
+    name: wowapi-network
+    driver: bridge
+
+volumes:
+  wowapi:
+    name: wowapi
+  dbdata:
+    name: dbdata
