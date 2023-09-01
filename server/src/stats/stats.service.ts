@@ -1,16 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { CreateStatDto } from './dto/create-stat.dto';
 import { UpdateStatDto } from './dto/update-stat.dto';
+import { DbService } from 'src/db/db.service';
 
 @Injectable()
 export class StatsService {
+
+  constructor(private readonly db: DbService) { }
+
   create(createStatDto: CreateStatDto) {
     return 'This action adds a new stat';
   }
 
-  findAll() {
-    console.log("stats again")
-    return `This action returns all stats`;
+  async findAll() {
+    console.log("earnings")
+    return await this.db.earning.findMany();
   }
 
   findOne(id: string) {

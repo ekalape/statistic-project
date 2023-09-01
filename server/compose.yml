@@ -5,13 +5,17 @@ services:
       dockerfile: Dockerfile
       context: .
     image: wowapi-image
+    env_file:
+      - .env
     depends_on:
-      - pgs-db
+      - pgsdb
     restart: unless-stopped
+    environment:
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@pgsdb:${DB_PORT}/pgsdb?schema=public"
     volumes:
       - ./src:/wowapi/src
       - node_modules:/wowapi/node_modules
-    command: npm run start:dev
+    command: npm run start:migrate-watch
     expose:
       - ${APP_PORT}
     ports:
@@ -19,12 +23,13 @@ services:
     networks:
       - wowapi-network
 
-  pgs-db:
-    container_name: pgs-db
+  pgsdb:
+    container_name: pgsdb
     build:
       dockerfile: Dockerfile.psg
       context: .
-    image: postgres:15.4-alpine3.17
+    env_file:
+      - .env
     restart: unless-stopped
     expose:
       - ${DB_PORT}
@@ -33,6 +38,7 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: pgsdb
     volumes:
       - dbdata:/var/lib/postgresql/data
     networks:

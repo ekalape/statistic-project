@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Char {
+  id        String    @id @default(uuid())
+  name      String
+  server    String
+  portrait  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  earnings  Earning[]
+}
+
+model Earning {
+  id       String   @id @default(uuid())
+  day      DateTime
+  amount   Int
+  belongTo String
+  char     Char     @relation(fields: [belongTo], references: [id])
+}

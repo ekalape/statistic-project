@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CharsService } from './chars.service';
 import { CreateCharDto } from './dto/create-char.dto';
 import { UpdateCharDto } from './dto/update-char.dto';
@@ -7,6 +7,7 @@ import { UpdateCharDto } from './dto/update-char.dto';
 export class CharsController {
   constructor(private readonly charsService: CharsService) { }
 
+  @UsePipes(new ValidationPipe())
   @Post()
   create(@Body() createCharDto: CreateCharDto) {
     return this.charsService.create(createCharDto);

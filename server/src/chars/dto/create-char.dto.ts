@@ -10,5 +10,5 @@ export class CreateCharDto {
     @IsString()
     server: string;
 
-    portrait: File | string | null
+    portrait: string | null
 }
