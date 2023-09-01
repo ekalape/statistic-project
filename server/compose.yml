@@ -1,18 +1,18 @@
 services:
   wowapi:
     container_name: wowapi
-    build: 
+    build:
       dockerfile: Dockerfile
       context: .
     image: wowapi-image
-    depends_on: 
+    depends_on:
       - pgs-db
     restart: unless-stopped
-    volumes: 
+    volumes:
       - ./src:/wowapi/src
-      - ./node_modules:/wowapi/node_modules
+      - node_modules:/wowapi/node_modules
     command: npm run start:dev
-    expose: 
+    expose:
       - ${APP_PORT}
     ports:
       - "${APP_PORT}:${APP_PORT}"
@@ -38,7 +38,6 @@ services:
     networks:
       - wowapi-network
 
-
 networks:
   wowapi-network:
     name: wowapi-network
@@ -49,3 +48,5 @@ volumes:
     name: wowapi
   dbdata:
     name: dbdata
+  node_modules:
+    name: node_modules

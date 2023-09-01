@@ -30,8 +30,8 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1",
-    "uuid": "^9.0.0"
+    "rimraf": "^5.0.1",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.1.17",
@@ -54,7 +54,8 @@
     "ts-loader": "^9.4.4",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "4.2.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "uuid": "^9.0.0"
   },
   "jest": {
     "moduleFileExtensions": [

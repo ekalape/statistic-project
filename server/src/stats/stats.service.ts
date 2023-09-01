@@ -9,6 +9,7 @@ export class StatsService {
   }
 
   findAll() {
+    console.log("stats again")
     return `This action returns all stats`;
   }
 
