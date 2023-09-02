@@ -1,9 +1,8 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsPositive, Max, ValidateNested } from 'class-validator';
 
 export class CreateStatDto {
 
-    @IsNotEmpty()
-    day: Date | string;
+    dayData: DayDataDto
 
     @IsNotEmpty()
     amount: number
@@ -11,4 +10,17 @@ export class CreateStatDto {
     @IsNotEmpty()
     belongTo: string
 
+}
+
+class DayDataDto {
+    @IsPositive()
+    @Max(31)
+    day: number;
+
+    @IsPositive()
+    @Max(11)
+    month: number;
+
+    @IsPositive()
+    year: number;
 }

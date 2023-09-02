@@ -9,6 +9,7 @@ export class StatsController {
 
   @Post()
   create(@Body() createStatDto: CreateStatDto) {
+    console.log(createStatDto)
     return this.statsService.create(createStatDto);
   }
 
@@ -19,7 +20,7 @@ export class StatsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.statsService.findOne(id);
+    return this.statsService.findOneByChar(id);
   }
 
   @Patch(':id')

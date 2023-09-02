@@ -13,19 +13,36 @@ export class CharsService {
     return char;
   }
 
-  findAll() {
-    return `This action returns all chars`;
+  async findAll() {
+    return await this.db.char.findMany();
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} char`;
+  async findOne(id: string) {
+    const char = await this.db.char.findUnique({
+      where: {
+        id
+      }
+    })
+
+    return char;
   }
 
-  update(id: string, updateCharDto: UpdateCharDto) {
-    return `This action updates a #${id} char`;
+  async update(id: string, updateCharDto: UpdateCharDto) {
+    const char = await this.db.char.update({
+      where: {
+        id
+      },
+      data: updateCharDto
+    })
+    return char;
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} char`;
+  async remove(id: string) {
+    const char = await this.db.char.delete({
+      where: {
+        id
+      }
+    })
+    return char;
   }
 }

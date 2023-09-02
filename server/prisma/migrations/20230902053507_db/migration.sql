@@ -3,6 +3,7 @@ CREATE TABLE "Char" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "server" TEXT NOT NULL,
+    "portrait" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -12,7 +13,9 @@ CREATE TABLE "Char" (
 -- CreateTable
 CREATE TABLE "Earning" (
     "id" TEXT NOT NULL,
-    "day" TIMESTAMP(3) NOT NULL,
+    "day" INTEGER NOT NULL,
+    "month" INTEGER NOT NULL,
+    "year" INTEGER NOT NULL,
     "amount" INTEGER NOT NULL,
     "belongTo" TEXT NOT NULL,
 
@@ -20,4 +23,4 @@ CREATE TABLE "Earning" (
 );
 
 -- AddForeignKey
-ALTER TABLE "Earning" ADD CONSTRAINT "Earning_belongTo_fkey" FOREIGN KEY ("belongTo") REFERENCES "Char"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Earning" ADD CONSTRAINT "Earning_belongTo_fkey" FOREIGN KEY ("belongTo") REFERENCES "Char"("id") ON DELETE CASCADE ON UPDATE CASCADE;

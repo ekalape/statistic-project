@@ -8,8 +8,19 @@ export class StatsService {
 
   constructor(private readonly db: DbService) { }
 
-  create(createStatDto: CreateStatDto) {
-    return 'This action adds a new stat';
+  async create(createStatDto: CreateStatDto) {
+    const { dayData, amount, belongTo } = createStatDto;
+    console.log(dayData)
+    let dd = dayData
+    if (!dayData) {
+      const today = new Date()
+      dd = { day: today.getDate(), month: today.getMonth(), year: today.getFullYear() }
+    }
+
+
+    return await this.db.earning.create({
+      data: { amount, belongTo, day: dd.day, month: dd.month, year: dd.year }
+    });
   }
 
   async findAll() {
@@ -17,15 +28,27 @@ export class StatsService {
     return await this.db.earning.findMany();
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} stat`;
+  async findOneByChar(id: string) {
+    const earns = await this.db.earning.findMany({
+      where: {
+        belongTo: id
+      }
+    })
+    return earns;
   }
 
-  update(id: string, updateStatDto: UpdateStatDto) {
-    return `This action updates a #${id} stat`;
+  async update(id: string, updateStatDto: UpdateStatDto) {
+    const earn = await this.db.earning.update({
+      where: { id },
+      data: updateStatDto
+    })
+    return earn;
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} stat`;
+  async remove(id: string) {
+    const earn = await this.db.earning.delete({
+      where: { id }
+    })
+    return earn;
   }
 }
