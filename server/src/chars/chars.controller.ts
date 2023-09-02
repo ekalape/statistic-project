@@ -1,7 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UsePipes, ValidationPipe, ParseUUIDPipe, UseInterceptors } from '@nestjs/common';
 import { CharsService } from './chars.service';
 import { CreateCharDto } from './dto/create-char.dto';
 import { UpdateCharDto } from './dto/update-char.dto';
+import { ExistingCharValidationInterceptor } from 'src/interceptors/existingChar.interceptor';
+
+
 
 @Controller('chars')
 export class CharsController {
@@ -9,6 +12,7 @@ export class CharsController {
 
   @UsePipes(new ValidationPipe())
   @Post()
+  @UseInterceptors(ExistingCharValidationInterceptor)
   create(@Body() createCharDto: CreateCharDto) {
     return this.charsService.create(createCharDto);
   }
@@ -19,17 +23,17 @@ export class CharsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.charsService.findOne(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateCharDto: UpdateCharDto) {
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() updateCharDto: UpdateCharDto) {
     return this.charsService.update(id, updateCharDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.charsService.remove(id);
   }
 

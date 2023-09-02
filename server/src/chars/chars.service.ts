@@ -6,6 +6,7 @@ import { DbService } from 'src/db/db.service';
 @Injectable()
 export class CharsService {
   constructor(private readonly db: DbService) { }
+
   async create(createCharDto: CreateCharDto) {
     const char = await this.db.char.create({
       data: createCharDto
