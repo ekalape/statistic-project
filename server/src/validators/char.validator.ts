@@ -7,33 +7,33 @@ import { DbService } from 'src/db/db.service';
 @ValidatorConstraint({ name: 'ExistingCharRule', async: true })
 @Injectable()
 export class ExistingCharRule implements ValidatorConstraintInterface {
-    constructor(private db: DbService) { }
+  constructor(private db: DbService) { }
 
-    async validate(body: CreateCharDto) {
-        const { name, server } = body
+  async validate(body: CreateCharDto) {
+    const { name, server } = body
 
-        try {
-            const namedChars = await this.db.char.findMany({
-                where: {
-                    server
-                }
-            });
-            if (namedChars.length === 0) {
-                return true;
-            } else {
-                const char = namedChars.find(ch => ch.name === name)
-                if (!char) return true;
-                else return false;
-            }
-        } catch (e) {
-            return false;
+    try {
+      const namedChars = await this.db.char.findMany({
+        where: {
+          server
         }
-
+      });
+      if (namedChars.length === 0) {
+        return true;
+      } else {
+        const char = namedChars.find(ch => ch.name === name)
+        if (!char) return true;
+        else return false;
+      }
+    } catch (e) {
+      return false;
     }
 
-    defaultMessage(args: ValidationArguments) {
-        return `Char already exists`;
-    }
+  }
+
+  defaultMessage(args: ValidationArguments) {
+    return `Char already exists`;
+  }
 }
 
 

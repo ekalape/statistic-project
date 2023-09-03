@@ -7,14 +7,15 @@ import { ExistingCharRule } from 'src/validators/char.validator';
 export class ExistingCharValidationInterceptor implements NestInterceptor {
   constructor(private existingCharRule: ExistingCharRule) { }
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest();
     const body: CreateCharDto = request.body;
 
     console.log("<---- inside interceptor --->", body)
 
-    const validationResult = this.existingCharRule.validate(body);
-    if (validationResult) {
+    const validationResult = await this.existingCharRule.validate(body);
+    console.log("validator says ---> ", validationResult)
+    if (!validationResult) {
       throw new BadRequestException("Such character already exists")
     }
 

@@ -4,6 +4,7 @@ CREATE TABLE "Char" (
     "name" TEXT NOT NULL,
     "server" TEXT NOT NULL,
     "portrait" TEXT,
+    "fraction" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

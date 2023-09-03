@@ -15,6 +15,7 @@ model Char {
   name      String
   server    String
   portrait  String?
+  fraction  String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   earnings  Earning[]

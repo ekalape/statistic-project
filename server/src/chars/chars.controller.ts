@@ -10,7 +10,7 @@ import { ExistingCharValidationInterceptor } from 'src/interceptors/existingChar
 export class CharsController {
   constructor(private readonly charsService: CharsService) { }
 
-  @UsePipes(new ValidationPipe())
+  //@UsePipes(new ValidationPipe())
   @Post()
   @UseInterceptors(ExistingCharValidationInterceptor)
   create(@Body() createCharDto: CreateCharDto) {

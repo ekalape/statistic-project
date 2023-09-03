@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateStatDto } from './dto/create-stat.dto';
 import { UpdateStatDto } from './dto/update-stat.dto';
 import { DbService } from 'src/db/db.service';
@@ -16,19 +16,26 @@ export class StatsService {
       const today = new Date()
       dd = { day: today.getDate(), month: today.getMonth(), year: today.getFullYear() }
     }
-
-
     return await this.db.earning.create({
       data: { amount, belongTo, day: dd.day, month: dd.month, year: dd.year }
     });
   }
 
   async findAll() {
-    console.log("earnings")
-    return await this.db.earning.findMany();
+    return await this.db.earning.findMany({
+      include: {
+        char: {
+          select: { name: true }
+        }
+      }
+    });
   }
 
   async findOneByChar(id: string) {
+    const char = await this.db.char.findUnique({
+      where: { id }
+    })
+    if (!char) { throw new NotFoundException("The character was not found") }
     const earns = await this.db.earning.findMany({
       where: {
         belongTo: id
@@ -42,6 +49,7 @@ export class StatsService {
       where: { id },
       data: updateStatDto
     })
+    if (!earn) { throw new NotFoundException("The record about this earning was not found") }
     return earn;
   }
 
@@ -49,6 +57,7 @@ export class StatsService {
     const earn = await this.db.earning.delete({
       where: { id }
     })
+    if (!earn) { throw new NotFoundException("The record about this earning was not found") }
     return earn;
   }
 }
