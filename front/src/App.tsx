@@ -1,10 +1,14 @@
+import { Container, Nav } from 'react-bootstrap';
 import './App.css';
+import Navbar from 'react-bootstrap/Navbar';
+import { BrowserRouter } from 'react-router-dom';
+import Router from './routes';
 
 function App() {
   return (
-    <>
-      <div>main</div>
-    </>
+    <BrowserRouter>
+      <Router />
+    </BrowserRouter>
   );
 }
 
