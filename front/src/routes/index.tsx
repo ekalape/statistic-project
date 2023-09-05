@@ -2,7 +2,6 @@ import { Routes, Route } from 'react-router-dom';
 import { AddPage } from '../pages/add_page';
 import { StatsPage } from '../pages/stats_page';
 import { MainPage } from '../pages/mainPage';
-import { Header } from '../components/Header';
 
 function Router() {
   return (
