@@ -2,11 +2,11 @@ export interface IChar {
     id: string
     name: string
     server: string
-    portrait: string
+    portrait: string | null
     fraction: string
     createdAt: number
     updatedAt: number
-    earnings: EarningType[]
+    earnings?: EarningType[]
 }
 
 export interface IEarning {
@@ -19,3 +19,9 @@ export interface IEarning {
 }
 
 export type EarningType = Partial<IEarning>
+
+export interface ICharsStore {
+    chars: IChar[]
+    getChars: () => void
+    addNewChar: (name: string, server: string, fraction: string, portrait: string | null) => Promise<boolean>
+}

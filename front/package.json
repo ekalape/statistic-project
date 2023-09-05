@@ -18,7 +18,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.15.0",
     "sass": "^1.66.1",
-    "sort-by": "^0.0.2"
+    "sort-by": "^0.0.2",
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
