@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import './style.scss';
+import { useState } from 'react';
 import { Navbar, Container, Nav, Badge } from 'react-bootstrap';
 import wowLogo from '../../assets/main-wow-icon.png';
 import { useLocation } from 'react-router-dom';
@@ -17,9 +18,11 @@ function Header() {
   return (
     <Navbar expand='md' className='bg-body-tertiary' fixed='top'>
       <Container className='justify-content-space-between'>
-        <Navbar.Brand href='/' className='w-25 d-flex align-items-center gap-2'>
-          <img src={wowLogo} alt='Wow logo' className='align-self-start' />
-          <span className='fs-5 fst-italic text-info d-none d-sm-block'>{logoName}</span>
+        <Navbar.Brand
+          href='/'
+          className='brand-addition d-flex align-items-center gap-0 flex-column'>
+          <img src={wowLogo} alt='Wow logo' className='logo-image' />
+          <span className='fs-7 fst-italic text-info d-none d-sm-block'>{logoName}</span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls='basic-navbar-nav' className='order-1' />
         <Navbar.Collapse

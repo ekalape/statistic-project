@@ -1,0 +1,9 @@
+.char-container {
+  height: 80px;
+  width: 100%;
+
+  @media (max-width: 575px) {
+    height: auto;
+    width: 80px;
+  }
+}
