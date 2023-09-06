@@ -23,7 +23,9 @@ export type EarningType = Partial<IEarning>
 export interface ICharsStore {
     chars: IChar[]
     selectedChars: IChar[]
+    selectedSingleChar: IChar | null
     getChars: () => void
     addNewChar: (name: string, server: string, fraction: string, portrait: string | null) => Promise<boolean>
     selectChar: (selChar: IChar) => void
+    setSelectedSingleChar: (char: IChar) => void
 }

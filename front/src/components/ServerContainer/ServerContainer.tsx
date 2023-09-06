@@ -13,9 +13,9 @@ function ServerContainer({ selectedServer, handleServerChange }: ServerContainer
   const chars = useCharsStore((state) => state.chars);
   const servs = ['all', ...new Set(chars.map((ch) => ch.server))];
 
-  const [servValue, setServValue] = useState(selectedServer);
+  //const [servValue, setServValue] = useState(selectedServer);
   function handleServChange(value: string) {
-    setServValue(value);
+    //setServValue(value);
     handleServerChange(value);
   }
 
@@ -29,7 +29,7 @@ function ServerContainer({ selectedServer, handleServerChange }: ServerContainer
             type='radio'
             name='servers'
             key={idx}
-            checked={servValue === s}
+            checked={selectedServer === s}
             onClick={(e) => {
               handleServChange(e.currentTarget.textContent || 'all');
             }}

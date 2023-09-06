@@ -3,26 +3,47 @@ import './style.scss';
 import hordeIcon from '../../assets/horde-icon.png';
 import alianceIcon from '../../assets/aliance-icon.png';
 import { useCharsStore } from '../../store/store';
-import { useEffect } from 'react';
-import { AddCardBtn } from '../AddCardBtn';
-import { IChar } from '../../utils/interfaces';
+import { useCallback, useEffect, useMemo } from 'react';
 
-function CharsContainer() {
+import { IChar } from '../../utils/interfaces';
+import { AddCardBtn } from '../AddCardBtn';
+
+function CharsContainer({ stat }: { stat: boolean }) {
   const charsStore = useCharsStore();
   const chars = useCharsStore((state) => state.chars);
-  const selChars = useCharsStore((state) => state.selectedChars);
+  const selChars = stat
+    ? useCharsStore((state) => state.selectedChars)
+    : useCharsStore((state) => state.selectedSingleChar);
 
   const addChar = () => {
     console.log('add');
   };
   const handleCharSelect = (char: IChar) => {
-    charsStore.selectChar(char);
+    if (stat) charsStore.selectChar(char);
+    else charsStore.setSelectedSingleChar(char);
   };
+
+  const bgColor = useCallback(
+    (ch: IChar) => {
+      let sel: IChar | null | undefined = null;
+      if (stat) {
+        sel = (selChars as IChar[]).find((c) => c.id === ch.id);
+      } else {
+        sel = selChars as IChar;
+      }
+
+      if (!sel || ch.id !== sel.id) return 'transparent';
+      if (sel.fraction === 'horde') return '#ff000042';
+      if (sel.fraction === 'aliance') return '#0066ff54';
+    },
+    [selChars],
+  );
 
   useEffect(() => {
     charsStore.getChars();
     console.log('selChars start', selChars);
   }, []);
+
   return (
     <div className='char-container'>
       {chars.map((ch) => (
@@ -31,13 +52,7 @@ function CharsContainer() {
           className='char-card'
           style={{
             borderColor: `${ch.fraction === 'horde' ? 'red' : 'lightBlue'}`,
-            background: `${
-              selChars.find((c) => c.id === ch.id)
-                ? ch.fraction === 'horde'
-                  ? '#ff000042'
-                  : '#006eff59'
-                : 'transparent'
-            }`,
+            background: `${bgColor(ch)}`,
           }}
           onClick={() => handleCharSelect(ch)}>
           <Card.Img

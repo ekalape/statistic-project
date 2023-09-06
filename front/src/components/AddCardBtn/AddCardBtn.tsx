@@ -1,4 +1,4 @@
-import { Badge, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import './style.scss';
 
 type AddBtnType = {

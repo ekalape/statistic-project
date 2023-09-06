@@ -8,6 +8,7 @@ const useCharsStore = create<ICharsStore>()(
     (set) => ({
       chars: [],
       selectedChars: [],
+      selectedSingleChar: null,
 
       getChars: async () => {
         const chars: IChar[] = temp_chars;
@@ -69,10 +70,16 @@ const useCharsStore = create<ICharsStore>()(
           }
         });
       },
+      setSelectedSingleChar: (char: IChar) => {
+        set((state) => ({ ...state, selectedSingleChar: char }));
+      },
     }),
     {
       name: 'chars-storage',
-      partialize: (state) => ({ selectedChars: state.selectedChars }),
+      partialize: (state) => ({
+        selectedChars: state.selectedChars,
+        selectedSingleChar: state.selectedSingleChar,
+      }),
     },
   ),
 );
