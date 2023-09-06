@@ -3,6 +3,7 @@
   width: 100%;
   display: flex;
   flex-direction: row;
+  justify-content: start;
   align-items: center;
   gap: 5px;
 
@@ -10,5 +11,16 @@
     height: auto;
     width: 80px;
     flex-direction: column;
+    padding: 5px;
   }
+}
+
+.char-card {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  border-width: 2px;
+  cursor: pointer;
+  color: #ff000042;
 }

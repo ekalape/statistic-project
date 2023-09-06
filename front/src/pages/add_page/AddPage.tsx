@@ -5,12 +5,12 @@ import { CharsContainer } from '../../components/CharsContainer';
 
 function AddPage() {
   return (
-    <Container className='d-flex base-container flex-row flex-sm-column'>
+    <div className='base-container'>
       <CharsContainer />
       <Container fluid className='border flex-grow-1 main-container'>
         2
       </Container>
-    </Container>
+    </div>
   );
 }
 

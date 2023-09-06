@@ -7,12 +7,12 @@ import { getToday } from '../../utils/getToday';
 
 function Header() {
   const getPathname = useLocation().pathname;
-  const lastDestination = getPathname === '/add' ? 'Add earning' : 'Statistics';
+  const lastDestination = getPathname === '/stats' ? 'Statistics' : 'Add earning';
   const [logoName, setLogoName] = useState(lastDestination);
 
   const displayedToday = getToday();
   const changeLogoName = (key: string | null) => {
-    let text = key || 'Statistics';
+    let text = key || 'Add earning';
     setLogoName(text);
   };
   return (
