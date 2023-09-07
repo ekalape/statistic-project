@@ -24,9 +24,9 @@ $body-tertiary-color-dark: rgba($body-color-dark, 0.5);
 $body-tertiary-bg-dark: mix($body-bg-dark, #000, 60%);
 $navbar-color: $primary;
 
-$body-emphasis-color-dark: mix($primary, #ffd651, 50%);
+$body-emphasis-color-dark: mix($primary, #ff2f2f, 90%);
 $emphasis-color: $primary;
-$border-color-dark: $gray-700;
+$border-color-dark: $info;
 $border-color-translucent-dark: rgba(#fff, 0.15);
 $headings-color-dark: inherit;
 $link-color-dark: tint-color($primary, 40%);

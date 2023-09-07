@@ -4,3 +4,8 @@ export function getToday() {
         .toString()
         .padStart(2, '0')}/${today.getFullYear()}`;
 }
+
+export function transformDate(date: string) {
+    const dateArr = date.split("-")
+    return `${dateArr[2]}/${dateArr[1]}/${dateArr[0]}`
+}

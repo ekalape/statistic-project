@@ -6,11 +6,11 @@ export interface IChar {
     fraction: string
     createdAt: number
     updatedAt: number
-    earnings?: EarningType[]
+    earnings: EarningType[]
 }
 
 export interface IEarning {
-    id: string;
+    id?: string;
     day: number;
     month: number;
     year: number;
@@ -18,13 +18,14 @@ export interface IEarning {
     belongTo: string
 }
 
-export type EarningType = Partial<IEarning>
+export type EarningType = Pick<IEarning, "amount">
 
 export interface ICharsStore {
     chars: IChar[]
     selectedChars: IChar[]
     selectedSingleChar: IChar | null
     getChars: () => void
+    addEarning: (earning: IEarning) => void
     addNewChar: (name: string, server: string, fraction: string, portrait: string | null) => Promise<boolean>
     selectChar: (selChar: IChar) => void
     setSelectedSingleChar: (char: IChar) => void

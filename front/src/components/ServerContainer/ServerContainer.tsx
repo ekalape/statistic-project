@@ -1,8 +1,6 @@
-import { Button, ButtonGroup, ToggleButton } from 'react-bootstrap';
+import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 import './style.scss';
 import { useCharsStore } from '../../store/store';
-import { useEffect, useState } from 'react';
-import { AddCardBtn } from '../AddCardBtn';
 
 type ServerContainerType = {
   selectedServer: string;
@@ -38,12 +36,6 @@ function ServerContainer({ selectedServer, handleServerChange }: ServerContainer
           </ToggleButton>
         ))}
       </ButtonGroup>
-      <AddCardBtn
-        handleClick={function (): void {
-          throw new Error('Function not implemented.');
-        }}
-        size={'30px'}
-      />
     </div>
   );
 }

@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { temp_chars } from '../assets/temp_chars';
-import { IChar, ICharsStore } from '../utils/interfaces';
+import { IChar, ICharsStore, IEarning } from '../utils/interfaces';
 import { persist } from 'zustand/middleware';
+import { getAllCharacters } from './apiCalls';
 
 const useCharsStore = create<ICharsStore>()(
   persist(
@@ -11,15 +12,31 @@ const useCharsStore = create<ICharsStore>()(
       selectedSingleChar: null,
 
       getChars: async () => {
-        const chars: IChar[] = temp_chars;
-        /*     const res = await fetch('localhost:4040/chars', {
-      method: "GET",
-      headers: {
-        'Content-type': "application/json"
-      }
-    }).catch();
-    const chars = await res.json(); */
+        const chars = await getAllCharacters();
         set({ chars: chars });
+      },
+      addEarning: async (profit: IEarning) => {
+        const char = temp_chars.find((ch) => ch.id === profit.belongTo);
+        if (!char) throw new Error('Character not found');
+        char.earnings?.push({ amount: profit.amount });
+
+        /*         set((state) => ({
+          chars: state.chars.map((ch) => {
+            if (ch.id === profit.belongTo) {
+              return { ...ch, earnings: [...(ch.earnings || []), { amount: profit.amount }] };
+            }
+            return ch;
+          }),
+        })); */
+
+        if (true) {
+          async (state: ICharsStore) => await state.getChars();
+
+          set((state) => ({
+            selectedSingleChar:
+              state.chars.find((ch) => ch.id === state.selectedSingleChar?.id) || null,
+          }));
+        }
       },
       addNewChar: async (
         name: string,
@@ -35,6 +52,7 @@ const useCharsStore = create<ICharsStore>()(
           portrait,
           createdAt: 11111111,
           updatedAt: 11111111,
+          earnings: [],
         };
         set((state) => ({ chars: [...state.chars, newChar] }));
 
@@ -59,12 +77,10 @@ const useCharsStore = create<ICharsStore>()(
           const ch = state.selectedChars.find((c) => c.id === selChar.id);
           if (ch) {
             return {
-              ...state,
               selectedChars: state.selectedChars.filter((sc) => sc.id !== selChar.id),
             };
           } else {
             return {
-              ...state,
               selectedChars: [...state.selectedChars, selChar],
             };
           }
