@@ -8,12 +8,14 @@ $font-sizes: (
 /* size */
 
 $theme-colors: (
-  'info': #a15374,
+  'info': #ffae51,
   'primary': #ffa8cc,
+  'secondary': #a15374,
+  'danger': #ff0000,
 );
-$info: #a15374;
+$info: #ffae51;
 $primary: #ffa8cc;
-$secondary: #459cff;
+$secondary: #a15374;
 
 $body-color-dark: $primary;
 $body-bg-dark: rgb(19, 9, 16);
@@ -26,12 +28,17 @@ $navbar-color: $primary;
 
 $body-emphasis-color-dark: mix($primary, #ff2f2f, 90%);
 $emphasis-color: $primary;
-$border-color-dark: $info;
+$border-color-dark: $secondary;
 $border-color-translucent-dark: rgba(#fff, 0.15);
 $headings-color-dark: inherit;
 $link-color-dark: tint-color($primary, 40%);
 $link-hover-color-dark: shift-color($link-color-dark, -40%);
 $code-color-dark: tint-color($code-color, 40%);
 $navbar-dark-color: #fff;
+$btn-close-color: $primary;
+$input-placeholder-color: mix($secondary, #000, 60%);
+$input-placeholder-style: 'italic';
+
+$transition: 0.4s;
 
 @import 'bootstrap/scss/bootstrap';

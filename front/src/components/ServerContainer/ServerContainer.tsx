@@ -22,7 +22,7 @@ function ServerContainer({ selectedServer, handleServerChange }: ServerContainer
       <ButtonGroup className='servers-radioGroup'>
         {servs.map((s, idx) => (
           <ToggleButton
-            variant='outline-info'
+            variant='outline-secondary'
             value={s}
             type='radio'
             name='servers'

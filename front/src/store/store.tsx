@@ -46,15 +46,15 @@ const useCharsStore = create<ICharsStore>()(
       ) => {
         const newChar: IChar = {
           id: '1111111',
-          name,
-          server,
-          fraction,
+          name: name,
+          server: server,
+          fraction: fraction,
           portrait,
           createdAt: 11111111,
           updatedAt: 11111111,
           earnings: [],
         };
-        set((state) => ({ chars: [...state.chars, newChar] }));
+        //   set((state) => ({ chars: [...state.chars, newChar] }));
 
         temp_chars.push(newChar);
 
@@ -67,8 +67,8 @@ const useCharsStore = create<ICharsStore>()(
     }).catch(); */
 
         if (/* res.ok */ true) {
-          set((state) => ({ chars: [...state.chars, newChar] }));
-          /* (state: ICharsStore) => state.getChars(); */
+          //set((state) => ({ chars: [...state.chars, newChar] }));
+          (state: ICharsStore) => state.getChars();
         }
         return /* res.ok */ true;
       },

@@ -1,10 +1,16 @@
 import { Button, Container, Form } from 'react-bootstrap';
 import { ServerContainer } from '../ServerContainer';
 import './style.scss';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useCharsStore } from '../../store/store';
 import { getToday, transformDate } from '../../utils/getToday';
 import { IEarning } from '../../utils/interfaces';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+
+interface IEarningFormInput {
+  date: string;
+  profit: number;
+}
 
 function AddEarnContainer() {
   const chars = useCharsStore((state) => state.chars);
@@ -13,32 +19,32 @@ function AddEarnContainer() {
   const getChars = useCharsStore((state) => state.getChars);
   const [selServer, setSelServer] = useState(selChar?.server || 'all');
   const [showDateField, setShowDateField] = useState(false);
-  const [date, setDate] = useState(getToday());
-  const dateRef = useRef<HTMLInputElement | null>(null);
-  const earningRef = useRef<HTMLInputElement | null>(null);
+  const [day, setDay] = useState(getToday());
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const toggleDateField = () => {
     setShowDateField((prev) => !prev);
   };
-  const handleEarningSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!dateRef.current) setDate(getToday());
-    else if (dateRef.current.value.trim() === '') {
-      setDate(getToday());
+  const handleEarningSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const { date, profit } = data as IEarningFormInput;
+    if (!date) {
+      setDay(getToday());
     } else {
-      console.log(dateRef.current);
-      setDate(transformDate(dateRef.current.value));
+      setDay(transformDate(date));
     }
 
-    console.log(earningRef.current?.value);
-    if (selChar && earningRef.current?.value) {
-      const dateArr = date.split('/');
+    if (selChar && profit) {
+      const dateArr = day.split('/');
       const earningData: IEarning = {
         day: +dateArr[0],
         month: +dateArr[1],
         year: +dateArr[2],
-        amount: +earningRef.current?.value,
+        amount: +profit,
         belongTo: selChar.id,
       };
       await addEarning(earningData);
@@ -46,7 +52,6 @@ function AddEarnContainer() {
   };
 
   useEffect(() => {
-    // console.log(chars.map((ch) => ch.earnings));
     console.log('chars changed', selChar?.earnings);
   }, [chars]);
 
@@ -64,16 +69,16 @@ function AddEarnContainer() {
           console.log('server -> ', value);
         }}
       />
-      <Form onSubmit={(e) => handleEarningSubmit(e)}>
+      <Form onSubmit={handleSubmit(handleEarningSubmit)}>
         <Form.Group
           className='mb-3 mt-5 d-flex flex-column align-content-center'
           controlId='dateInput'>
           <Form.Label>
             <i>The day is </i>
-            {date}
+            {day}
           </Form.Label>
           <Button
-            variant='outline-info'
+            variant='outline-secondary'
             className='ps-2 pb-1 pt-0 pe-2 mb-3 w-25 align-self-center'
             style={{ height: '30px', fontSize: '0.8rem' }}
             onClick={toggleDateField}>
@@ -83,7 +88,7 @@ function AddEarnContainer() {
             <Form.Control
               type='date'
               placeholder='Enter date'
-              ref={dateRef}
+              {...register('date')}
               className='w-25 align-self-center'
             />
           )}
@@ -96,15 +101,24 @@ function AddEarnContainer() {
           <Form.Control
             type='number'
             placeholder='Enter sum'
-            ref={earningRef}
+            {...register('profit', {
+              required: true,
+              pattern: /^[0-9]+$/i,
+            })}
+            aria-invalid={errors.profit ? 'true' : 'false'}
             className='w-25 align-self-center'
           />
+          {errors.profit?.type === 'required' && (
+            <p role='alert' className='align-self-center fs-7 fst-italic text-danger'>
+              You have to enter the profit
+            </p>
+          )}
         </Form.Group>
-        <Button variant='info' type='submit' /*  onClick={handleEarningSubmit} */>
+        <Button variant='secondary' type='submit'>
           Submit
         </Button>
       </Form>
-      <div>{selChar?.earnings?.reduce((acc, val) => acc + (val.amount || 0), 0)}</div>
+      <div>{selChar?.earnings?.reduce((acc, val) => acc + (+val.amount || 0), 0)}</div>
     </Container>
   );
 }

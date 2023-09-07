@@ -22,7 +22,7 @@ function Header() {
           href='/'
           className='brand-addition d-flex align-items-center gap-0 flex-column'>
           <img src={wowLogo} alt='Wow logo' className='logo-image' />
-          <span className='fs-7 fst-italic text-info d-none d-sm-block'>{logoName}</span>
+          <span className='fs-7 fst-italic text-secondary d-none d-sm-block'>{logoName}</span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls='basic-navbar-nav' className='order-1' />
         <Navbar.Collapse
@@ -41,7 +41,7 @@ function Header() {
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
-        <Badge bg='transparent' text='info' className='order-0 order-md-2 fs-6 fst-italic'>
+        <Badge bg='transparent' text='secondary' className='order-0 order-md-2 fs-6 fst-italic'>
           {displayedToday}
         </Badge>
       </Container>
