@@ -41,9 +41,7 @@ function CharsContainer({ stat }: { stat: boolean }) {
         formData[`${EAddCharInputs.FRACT_INPUT}`],
         null,
       );
-      console.log('chars', chars);
     }
-    console.log('add char');
     setShowAddModal(false);
   };
   const handleCharSelect = (char: IChar) => {
@@ -53,16 +51,17 @@ function CharsContainer({ stat }: { stat: boolean }) {
 
   const bgColor = useCallback(
     (ch: IChar) => {
-      let sel: IChar | null | undefined = null;
       if (stat) {
-        sel = (selChars as IChar[]).find((c) => c.id === ch.id);
+        if ((selChars as IChar[]).map((s) => s.id).includes(ch.id)) {
+          if (ch.fraction === 'horde') return '#ff000042';
+          if (ch.fraction === 'aliance') return '#0066ff54';
+        } else return 'transparent';
       } else {
-        sel = selChars as IChar;
+        const sel = selChars as IChar;
+        if (!sel || ch.id !== sel.id) return 'transparent';
+        if (sel.fraction === 'horde') return '#ff000042';
+        if (sel.fraction === 'aliance') return '#0066ff54';
       }
-
-      if (!sel || ch.id !== sel.id) return 'transparent';
-      if (sel.fraction === 'horde') return '#ff000042';
-      if (sel.fraction === 'aliance') return '#0066ff54';
     },
     [selChars],
   );

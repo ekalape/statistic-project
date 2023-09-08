@@ -12,10 +12,8 @@ function DateChooser(props: DateChooserType) {
   const { label, day, size, handleDate } = props;
   const [showChangeDate, setShowChangeDate] = useState(false);
   const today = new Date();
-  console.log(day);
 
   function changeDate(value: string) {
-    console.log('value', value);
     const date = new Date(value);
     if (date > today) {
       handleDate(today);

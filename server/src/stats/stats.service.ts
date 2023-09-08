@@ -22,13 +22,7 @@ export class StatsService {
   }
 
   async findAll() {
-    return await this.db.earning.findMany({
-      include: {
-        char: {
-          select: { name: true }
-        }
-      }
-    });
+    return await this.db.earning.findMany({});
   }
 
   async findOneByChar(id: string) {

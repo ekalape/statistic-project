@@ -19,7 +19,7 @@ function AddEarnContainer() {
   const chars = useCharsStore((state) => state.chars);
   const selChar = useCharsStore((state) => state.selectedSingleChar);
   const addEarning = useCharsStore((state) => state.addEarning);
-  const getChars = useCharsStore((state) => state.getChars);
+
   const [selServer, setSelServer] = useState(selChar?.server || 'all');
   const [showDateField, setShowDateField] = useState(false);
   const [day, setDay] = useState(today);
@@ -30,9 +30,6 @@ function AddEarnContainer() {
     formState: { errors },
   } = useForm();
 
-  const toggleDateField = () => {
-    setShowDateField((prev) => !prev);
-  };
   function handleDate(value: Date) {
     if (value < today) setDay(value);
     setShowDateField(false);

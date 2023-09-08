@@ -15,7 +15,8 @@ export interface IEarning {
     month: number;
     year: number;
     amount: number;
-    belongTo: string
+    belongTo: string;
+
 }
 
 export type EarningType = Pick<IEarning, "amount">
@@ -29,7 +30,9 @@ export interface ICharsStore {
     addEarning: (earning: IEarning) => void
     addNewChar: (name: string, server: string, fraction: string, portrait: string | null) => Promise<boolean>
     selectChar: (selChar: IChar) => void
+    selectAllChars: (newchars: IChar[]) => void
     setSelectedSingleChar: (char: IChar) => void
     setTimeSign: (sign: Date) => void
+
 
 }

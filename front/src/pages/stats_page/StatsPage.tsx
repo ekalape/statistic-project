@@ -5,7 +5,7 @@ import { StatsContainer } from '../../components/StatsContaner';
 function StatsPage() {
   return (
     <div className='base-container'>
-      <CharsContainer stat={false} />
+      <CharsContainer stat={true} />
       <StatsContainer />
     </div>
   );

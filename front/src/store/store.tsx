@@ -73,6 +73,9 @@ const useCharsStore = create<ICharsStore>()(
         }
         return /* res.ok */ true;
       },
+      selectAllChars: (newchars: IChar[]) => {
+        set({ selectedChars: newchars });
+      },
       selectChar: (selChar: IChar) => {
         set((state) => {
           const ch = state.selectedChars.find((c) => c.id === selChar.id);
