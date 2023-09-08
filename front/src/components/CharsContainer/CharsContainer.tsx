@@ -9,11 +9,12 @@ import { IChar } from '../../utils/interfaces';
 import { AddCardBtn } from '../AddCardBtn';
 import { EAddCharInputs } from '../../utils/constants';
 import { useForm } from 'react-hook-form';
+import { addNewCharacter } from '../../store/apiCalls';
 
 function CharsContainer({ stat }: { stat: boolean }) {
   const charsStore = useCharsStore();
   const chars = useCharsStore((state) => state.chars);
-  const addNewChar = useCharsStore((state) => state.addNewChar);
+  /*   const addNewChar = useCharsStore((state) => state.addNewChar); */
 
   const {
     register,
@@ -35,12 +36,15 @@ function CharsContainer({ stat }: { stat: boolean }) {
         formData[key] = value as string;
       });
       console.log(...Object.values(formData));
-      await addNewChar(
+      const success = await addNewCharacter(
         formData[`${EAddCharInputs.NAME_INPUT}`],
         formData[`${EAddCharInputs.SERV_INPUT}`],
         formData[`${EAddCharInputs.FRACT_INPUT}`],
         null,
       );
+      if (success) {
+        charsStore.getChars();
+      }
     }
     setShowAddModal(false);
   };

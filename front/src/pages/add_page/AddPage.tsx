@@ -1,5 +1,3 @@
-import './style.scss';
-
 import { CharsContainer } from '../../components/CharsContainer';
 import { AddEarnContainer } from '../../components/AddEarnContainer';
 

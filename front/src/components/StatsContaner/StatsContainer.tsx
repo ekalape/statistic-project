@@ -1,11 +1,11 @@
 import { Button, Container } from 'react-bootstrap';
 import { ServerContainer } from '../ServerContainer';
-import './style.scss';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { DateChooser } from '../DateChooser';
 import { useCharsStore } from '../../store/store';
+import { getAllProfits } from '../../store/apiCalls';
 
 const defDate = new Date();
 
@@ -44,16 +44,15 @@ function StatsContainer() {
       setFromDay(value);
     }
   }
+
   useEffect(() => {
     setSelServer(servToSelect);
   }, [store.selectedChars]);
 
   useEffect(() => {
-    //HERE GOES APICALL
-    const profit = store.selectedChars
-      .map((s) => s.earnings.reduce((acc, p) => acc + +p.amount, 0))
-      .reduce((acc, m) => acc + m, 0);
-    setFullProfit(profit);
+    getAllProfits(fromDay, toDay, store.selectedChars).then((data) => {
+      setFullProfit(data.reduce((acc, p) => acc + p.amount, 0));
+    });
   }, [store.selectedChars, fromDay, toDay]);
 
   return (

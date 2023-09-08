@@ -1,4 +1,4 @@
-import { Button, Container, Form } from 'react-bootstrap';
+import { Button, Container, Form, Toast } from 'react-bootstrap';
 import { ServerContainer } from '../ServerContainer';
 import './style.scss';
 import { useEffect, useState } from 'react';
@@ -7,6 +7,7 @@ import { getToday, transformDate } from '../../utils/getToday';
 import { IEarning } from '../../utils/interfaces';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { DateChooser } from '../DateChooser';
+import { addNewEarning } from '../../store/apiCalls';
 
 const today = new Date();
 
@@ -18,7 +19,9 @@ interface IEarningFormInput {
 function AddEarnContainer() {
   const chars = useCharsStore((state) => state.chars);
   const selChar = useCharsStore((state) => state.selectedSingleChar);
-  const addEarning = useCharsStore((state) => state.addEarning);
+  const updateSelectedChar = useCharsStore((state) => state.updateSelectedChar);
+
+  const [showToast, setShowToast] = useState(false);
 
   const [selServer, setSelServer] = useState(selChar?.server || 'all');
   const [showDateField, setShowDateField] = useState(false);
@@ -42,7 +45,6 @@ function AddEarnContainer() {
     } else {
       setDay(new Date(date));
     }
-
     if (selChar && profit) {
       const dateArr = [day.getDate(), day.getMonth() + 1, day.getFullYear()];
       const earningData: IEarning = {
@@ -53,7 +55,15 @@ function AddEarnContainer() {
         belongTo: selChar.id,
       };
       console.log(earningData);
-      await addEarning(earningData);
+      if (selChar && profit) {
+        const success = await addNewEarning(selChar.id, day, +profit);
+        if (success) {
+          setShowToast(true);
+          await updateSelectedChar(selChar.id);
+        } else {
+          console.log('bad request');
+        }
+      }
     }
   };
 
@@ -117,6 +127,20 @@ function AddEarnContainer() {
         </Button>
       </Form>
       <div>{selChar?.earnings?.reduce((acc, val) => acc + (+val.amount || 0), 0)}</div>
+      {showToast && (
+        <Toast
+          show={showToast}
+          onClose={() => setShowToast(false)}
+          autohide={true}
+          delay={2000}
+          bg={'success'}>
+          <Toast.Header>
+            <img src='holder.js/20x20?text=%20' className='rounded me-2' alt='' />
+            <strong className='me-auto'>Success!</strong>
+          </Toast.Header>
+          <Toast.Body>Your earning for {selChar?.name} was succesfully added!</Toast.Body>
+        </Toast>
+      )}
     </Container>
   );
 }

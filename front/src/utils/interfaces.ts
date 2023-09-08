@@ -27,12 +27,12 @@ export interface ICharsStore {
     selectedSingleChar: IChar | null
     timeSign: Date
     getChars: () => void
-    addEarning: (earning: IEarning) => void
-    addNewChar: (name: string, server: string, fraction: string, portrait: string | null) => Promise<boolean>
     selectChar: (selChar: IChar) => void
     selectAllChars: (newchars: IChar[]) => void
     setSelectedSingleChar: (char: IChar) => void
     setTimeSign: (sign: Date) => void
+    updateSelectedChar: (charId: string) => void
+
 
 
 }
