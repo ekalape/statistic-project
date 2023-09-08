@@ -3,14 +3,24 @@ import { useState } from 'react';
 import { Navbar, Container, Nav, Badge } from 'react-bootstrap';
 import wowLogo from '../../assets/main-wow-icon.png';
 import { useLocation } from 'react-router-dom';
-import { getToday } from '../../utils/getToday';
+
+import { DateChooser } from '../DateChooser';
+import { useCharsStore } from '../../store/store';
 
 function Header() {
   const getPathname = useLocation().pathname;
   const lastDestination = getPathname === '/stats' ? 'Statistics' : 'Add earning';
   const [logoName, setLogoName] = useState(lastDestination);
 
-  const displayedToday = getToday();
+  const sign = new Date(useCharsStore((state) => state.timeSign));
+
+  const setSign = useCharsStore((state) => state.setTimeSign);
+
+  function handleTimeSign(value: Date) {
+    setSign(value);
+  }
+
+  const displayedToday = new Date();
   const changeLogoName = (key: string | null) => {
     let text = key || 'Add earning';
     setLogoName(text);
@@ -41,9 +51,12 @@ function Header() {
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
-        <Badge bg='transparent' text='secondary' className='order-0 order-md-2 fs-6 fst-italic'>
-          {displayedToday}
-        </Badge>
+        <div className='w-25 order-0 order-md-2 d-flex align-items-center justify-content-end'>
+          <Badge bg='transparent' text='secondary' className=' fs-6 fst-italic'>
+            Today - {displayedToday.toLocaleDateString()}
+          </Badge>
+          <DateChooser label={'Sign'} day={sign} handleDate={handleTimeSign} size='sm' />
+        </div>
       </Container>
     </Navbar>
   );

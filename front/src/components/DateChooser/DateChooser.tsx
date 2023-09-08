@@ -2,33 +2,33 @@ import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 
 type DateChooserType = {
-  label: 'From' | 'to' | 'The day is';
+  label: 'From' | 'to' | 'The day is' | 'Sign';
   day: Date;
+  size: 'sm' | 'lg';
   handleDate: (value: Date) => void;
 };
 
 function DateChooser(props: DateChooserType) {
-  const { label, day, handleDate } = props;
+  const { label, day, size, handleDate } = props;
   const [showChangeDate, setShowChangeDate] = useState(false);
   const today = new Date();
+  console.log(day);
 
   function changeDate(value: string) {
     console.log('value', value);
     const date = new Date(value);
     if (date > today) {
-      console.log('dates --> ', date, today);
-      console.log('inside dateChanger -- ', date > today);
       handleDate(today);
     } else handleDate(date);
     setShowChangeDate(false);
   }
 
   return (
-    <div className='d-flex flex-column gap-2 mt-2'>
+    <div className='d-flex flex-column gap-2'>
       <Button
         variant='outline-primary'
-        className='ps-4 pe-4 fs-6'
-        style={{ width: '180px' }}
+        className={size === 'lg' ? 'px-4 fs-6' : 'px-1 fs-7 text-secondary'}
+        style={{ width: `${size === 'lg' ? '180px' : '100px'}` }}
         onClick={() => setShowChangeDate((prev) => !prev)}>
         <i>{label}</i> <b>{day.toLocaleDateString()}</b>
       </Button>

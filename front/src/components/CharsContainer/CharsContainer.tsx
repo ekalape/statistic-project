@@ -91,7 +91,7 @@ function CharsContainer({ stat }: { stat: boolean }) {
           <Card.Text style={{ fontSize: '0.8rem' }}>{ch.name}</Card.Text>
         </Card>
       ))}
-      <AddCardBtn handleClick={() => setShowAddModal(true)} size='40px' />
+      <AddCardBtn handleClick={() => setShowAddModal(true)} size='40px' text='+' />
       <Modal show={showAddModal} onHide={() => setShowAddModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Add new character</Modal.Title>

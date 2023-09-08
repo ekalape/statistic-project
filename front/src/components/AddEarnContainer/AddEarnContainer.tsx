@@ -84,18 +84,8 @@ function AddEarnContainer() {
         <Form.Group
           className='mb-3 mt-5 d-flex flex-column align-items-center'
           controlId='dateInput'>
-          <DateChooser label={'The day is'} day={day} handleDate={handleDate} />
-          {/*  <Form.Label>
-            <i>The day is </i>
-            {day}
-          </Form.Label>
-          <Button
-            variant='outline-secondary'
-            className='ps-2 pb-1 pt-0 pe-2 mb-3 w-25 align-self-center'
-            style={{ height: '30px', fontSize: '0.8rem' }}
-            onClick={toggleDateField}>
-            Change
-          </Button> */}
+          <DateChooser label={'The day is'} day={day} handleDate={handleDate} size='lg' />
+
           {showDateField && (
             <Form.Control
               type='date'

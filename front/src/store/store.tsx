@@ -10,6 +10,7 @@ const useCharsStore = create<ICharsStore>()(
       chars: [],
       selectedChars: [],
       selectedSingleChar: null,
+      timeSign: new Date(),
 
       getChars: async () => {
         const chars = await getAllCharacters();
@@ -89,12 +90,16 @@ const useCharsStore = create<ICharsStore>()(
       setSelectedSingleChar: (char: IChar) => {
         set((state) => ({ ...state, selectedSingleChar: char }));
       },
+      setTimeSign: (sign: Date) => {
+        set((state) => ({ ...state, timeSign: sign }));
+      },
     }),
     {
       name: 'chars-storage',
       partialize: (state) => ({
         selectedChars: state.selectedChars,
         selectedSingleChar: state.selectedSingleChar,
+        timeSign: state.timeSign,
       }),
     },
   ),

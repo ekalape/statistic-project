@@ -1,15 +1,18 @@
-import { Button, Container, Form } from 'react-bootstrap';
+import { Button, Container } from 'react-bootstrap';
 import { ServerContainer } from '../ServerContainer';
 import './style.scss';
 
-import { useRef, useState } from 'react';
-import { getToday } from '../../utils/getToday';
+import { useState } from 'react';
+
 import { DateChooser } from '../DateChooser';
+import { useCharsStore } from '../../store/store';
+import { AddCardBtn } from '../AddCardBtn';
 
 const defDate = new Date();
 
 function StatsContainer() {
-  const [fromDay, setFromDay] = useState(defDate);
+  const sign = new Date(useCharsStore((state) => state.timeSign));
+  const [fromDay, setFromDay] = useState(sign);
   const [toDay, setToDay] = useState(defDate);
 
   function handleFromDate(value: Date) {
@@ -19,7 +22,6 @@ function StatsContainer() {
     }
   }
   function handleToDate(value: Date) {
-    console.log('value', value);
     setToDay(value);
     if (value < fromDay) {
       setFromDay(value);
@@ -34,9 +36,21 @@ function StatsContainer() {
           throw new Error('Function not implemented.');
         }}
       />
-      <div className='w-50 d-flex flex-md-row flex-column gap-2 justify-content-center align-items-start ms-sm-0 ms-n5'>
-        <DateChooser label={'From'} day={fromDay} handleDate={handleFromDate} />
-        <DateChooser label={'to'} day={toDay} handleDate={handleToDate} />
+      <div className='w-50 d-flex flex-md-row flex-column gap-2 pt-2 justify-content-center align-items-start ms-sm-0 ms-n5'>
+        <Button
+          variant='outline-primary'
+          className='fs-6 fst-italic'
+          onClick={() => handleFromDate(sign)}>
+          Sign
+        </Button>
+        <DateChooser label={'From'} day={fromDay} handleDate={handleFromDate} size='lg' />
+        <DateChooser label={'to'} day={toDay} handleDate={handleToDate} size='lg' />
+        <Button
+          variant='outline-primary'
+          className='fs-6 fst-italic'
+          onClick={() => handleToDate(defDate)}>
+          Today
+        </Button>
       </div>
     </Container>
   );
