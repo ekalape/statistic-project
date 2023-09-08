@@ -8,12 +8,12 @@ $font-sizes: (
 /* size */
 
 $theme-colors: (
-  'info': #ffae51,
+  'info': #51bfff,
   'primary': #ffa8cc,
   'secondary': #a15374,
   'danger': #ff0000,
 );
-$info: #ffae51;
+$info: #51bfff;
 $primary: #ffa8cc;
 $secondary: #a15374;
 
@@ -40,5 +40,6 @@ $input-placeholder-color: mix($secondary, #000, 60%);
 $input-placeholder-style: 'italic';
 
 $transition: 0.4s;
+$enable-negative-margins: true;
 
 @import 'bootstrap/scss/bootstrap';

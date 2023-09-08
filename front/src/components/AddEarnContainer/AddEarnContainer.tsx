@@ -6,6 +6,9 @@ import { useCharsStore } from '../../store/store';
 import { getToday, transformDate } from '../../utils/getToday';
 import { IEarning } from '../../utils/interfaces';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { DateChooser } from '../DateChooser';
+
+const today = new Date();
 
 interface IEarningFormInput {
   date: string;
@@ -19,7 +22,7 @@ function AddEarnContainer() {
   const getChars = useCharsStore((state) => state.getChars);
   const [selServer, setSelServer] = useState(selChar?.server || 'all');
   const [showDateField, setShowDateField] = useState(false);
-  const [day, setDay] = useState(getToday());
+  const [day, setDay] = useState(today);
 
   const {
     register,
@@ -30,16 +33,21 @@ function AddEarnContainer() {
   const toggleDateField = () => {
     setShowDateField((prev) => !prev);
   };
+  function handleDate(value: Date) {
+    if (value < today) setDay(value);
+    setShowDateField(false);
+  }
+
   const handleEarningSubmit: SubmitHandler<FieldValues> = async (data) => {
     const { date, profit } = data as IEarningFormInput;
     if (!date) {
-      setDay(getToday());
+      setDay(today);
     } else {
-      setDay(transformDate(date));
+      setDay(new Date(date));
     }
 
     if (selChar && profit) {
-      const dateArr = day.split('/');
+      const dateArr = [day.getDate(), day.getMonth() + 1, day.getFullYear()];
       const earningData: IEarning = {
         day: +dateArr[0],
         month: +dateArr[1],
@@ -47,6 +55,7 @@ function AddEarnContainer() {
         amount: +profit,
         belongTo: selChar.id,
       };
+      console.log(earningData);
       await addEarning(earningData);
     }
   };
@@ -61,7 +70,7 @@ function AddEarnContainer() {
   }, [selChar]);
 
   return (
-    <Container fluid className='border flex-grow-1 main-container'>
+    <Container fluid className='border flex-grow-1 d-flex flex-column align-items-center '>
       <ServerContainer
         selectedServer={selServer}
         handleServerChange={(value) => {
@@ -69,11 +78,14 @@ function AddEarnContainer() {
           console.log('server -> ', value);
         }}
       />
-      <Form onSubmit={handleSubmit(handleEarningSubmit)}>
+      <Form
+        onSubmit={handleSubmit(handleEarningSubmit)}
+        className='d-flex flex-column w-50 align-items-center align-content-center'>
         <Form.Group
-          className='mb-3 mt-5 d-flex flex-column align-content-center'
+          className='mb-3 mt-5 d-flex flex-column align-items-center'
           controlId='dateInput'>
-          <Form.Label>
+          <DateChooser label={'The day is'} day={day} handleDate={handleDate} />
+          {/*  <Form.Label>
             <i>The day is </i>
             {day}
           </Form.Label>
@@ -83,13 +95,13 @@ function AddEarnContainer() {
             style={{ height: '30px', fontSize: '0.8rem' }}
             onClick={toggleDateField}>
             Change
-          </Button>
+          </Button> */}
           {showDateField && (
             <Form.Control
               type='date'
               placeholder='Enter date'
               {...register('date')}
-              className='w-25 align-self-center'
+              className=' align-self-center'
             />
           )}
         </Form.Group>
@@ -106,7 +118,6 @@ function AddEarnContainer() {
               pattern: /^[0-9]+$/i,
             })}
             aria-invalid={errors.profit ? 'true' : 'false'}
-            className='w-25 align-self-center'
           />
           {errors.profit?.type === 'required' && (
             <p role='alert' className='align-self-center fs-7 fst-italic text-danger'>
