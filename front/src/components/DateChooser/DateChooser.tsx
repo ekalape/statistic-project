@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Button } from 'react-bootstrap';
 
 type DateChooserType = {
@@ -8,7 +8,7 @@ type DateChooserType = {
   handleDate: (value: Date) => void;
 };
 
-function DateChooser(props: DateChooserType) {
+const DateChooser = memo((props: DateChooserType) => {
   const { label, day, size, handleDate } = props;
   const [showChangeDate, setShowChangeDate] = useState(false);
   const today = new Date();
@@ -22,22 +22,24 @@ function DateChooser(props: DateChooserType) {
   }
 
   return (
-    <div className='d-flex flex-column gap-2'>
+    <div className={`d-flex flex-column gap-2 position-relative`}>
       <Button
         variant='outline-primary'
-        className={size === 'lg' ? 'px-4 fs-6' : 'px-1 fs-7 text-secondary'}
-        style={{ width: `${size === 'lg' ? '180px' : '100px'}` }}
+        className={size === 'lg' ? 'px-3 fs-7' : 'px-1 fs-8 text-secondary'}
+        style={{ width: `${size === 'lg' ? '160px' : '100px'}` }}
         onClick={() => setShowChangeDate((prev) => !prev)}>
         <i>{label}</i> <b>{day.toLocaleDateString()}</b>
       </Button>
       {showChangeDate && (
         <input
           type='Date'
-          className=' ps-2 pe-2 border border-secondary rounded text-info bg-primary-subtle'
+          className={`ps-2 pe-2 border border-secondary rounded text-info bg-primary-subtle ${
+            size === 'sm' ? 'position-absolute top-110 ' : 'position-absolute bottom-110'
+          }`}
           onChange={(e) => changeDate(e.currentTarget?.value)}></input>
       )}
     </div>
   );
-}
+});
 
 export default DateChooser;

@@ -18,7 +18,7 @@ export interface IEarning {
 
 }
 
-export type EarningType = Pick<IEarning, "amount">
+export type EarningType = Pick<IEarning, "amount" | "date">
 
 export interface ICharsStore {
     chars: IChar[]

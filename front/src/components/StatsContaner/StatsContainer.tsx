@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { DateChooser } from '../DateChooser';
 import { useCharsStore } from '../../store/store';
 import { getAllProfits } from '../../store/apiCalls';
+import { RoundChart } from '../Charts';
 
 const defDate = new Date();
 
@@ -61,7 +62,7 @@ function StatsContainer() {
       <div className='w-50 d-flex flex-md-row flex-column gap-2 pt-2 justify-content-center align-items-start ms-sm-0 ms-n5'>
         <Button
           variant='outline-primary'
-          className='fs-6 fst-italic'
+          className='fs-7 fst-italic'
           onClick={() => handleFromDate(sign)}>
           Sign
         </Button>
@@ -69,12 +70,13 @@ function StatsContainer() {
         <DateChooser label={'to'} day={toDay} handleDate={handleToDate} size='lg' />
         <Button
           variant='outline-primary'
-          className='fs-6 fst-italic'
+          className='fs-7 fst-italic'
           onClick={() => handleToDate(defDate)}>
           Today
         </Button>
       </div>
-      All profits: {fullProfit}
+      <div> All profits: {fullProfit}</div>
+      <RoundChart startDate={fromDay} endDate={toDay} />
     </Container>
   );
 }

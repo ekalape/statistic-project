@@ -7,7 +7,6 @@ import { IEarning } from '../../utils/interfaces';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { DateChooser } from '../DateChooser';
 import { addNewEarning } from '../../store/apiCalls';
-import { formatDate } from '../../utils/formatDate';
 
 const today = new Date();
 
@@ -17,7 +16,6 @@ interface IEarningFormInput {
 }
 
 function AddEarnContainer() {
-  const chars = useCharsStore((state) => state.chars);
   const selChar = useCharsStore((state) => state.selectedSingleChar);
   const updateSelectedChar = useCharsStore((state) => state.updateSelectedChar);
 
@@ -41,13 +39,9 @@ function AddEarnContainer() {
   }
 
   const handleEarningSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const { date, profit } = data as IEarningFormInput;
-    console.log('date --> ', date);
-    if (!date) {
-      setDay(today);
-    } else {
-      setDay(new Date(date));
-    }
+    const { profit } = data as IEarningFormInput;
+
+    console.log('date --> ', day.toLocaleDateString());
     if (selChar && profit) {
       if (selChar && profit) {
         const success = await addNewEarning(selChar.id, day, +profit);
@@ -55,7 +49,7 @@ function AddEarnContainer() {
           setShowToast(true);
           await updateSelectedChar(selChar.id);
         } else {
-          console.log('bad request');
+          console.log('Bad request');
         }
       }
     }
@@ -66,7 +60,7 @@ function AddEarnContainer() {
   }, [selChar]);
 
   useEffect(() => {
-    if (formState.isSubmitSuccessful) {
+    if (isSubmitSuccessful) {
       reset({ profit: '' });
     }
   }, [formState, reset]);

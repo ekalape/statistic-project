@@ -4,6 +4,7 @@
 /* size */
 $font-sizes: (
   7: $font-size-base * 0.8,
+  8: $font-size-base * 0.7,
 );
 /* size */
 
@@ -39,6 +40,9 @@ $navbar-dark-color: #fff;
 $btn-close-color: $primary;
 $input-placeholder-color: mix($secondary, #000, 60%);
 $input-placeholder-style: 'italic';
+$position-values: (
+  110: 110%,
+);
 
 $transition: 0.4s;
 $enable-negative-margins: true;
