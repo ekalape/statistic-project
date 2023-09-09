@@ -11,11 +11,10 @@ export interface IChar {
 
 export interface IEarning {
     id?: string;
-    day: number;
-    month: number;
-    year: number;
+    date: string;
     amount: number;
     belongTo: string;
+    char?: { name: string, server: string }
 
 }
 

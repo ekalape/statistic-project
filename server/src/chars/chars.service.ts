@@ -20,7 +20,7 @@ export class CharsService {
     return await this.db.char.findMany({
       include: {
         earnings: {
-          select: { amount: true }
+          select: { amount: true, date: true }
         }
       }
     });
@@ -33,7 +33,7 @@ export class CharsService {
       },
       include: {
         earnings: {
-          select: { amount: true }
+          select: { amount: true, date: true }
         }
       }
     })

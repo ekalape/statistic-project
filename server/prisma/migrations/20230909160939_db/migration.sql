@@ -14,9 +14,7 @@ CREATE TABLE "Char" (
 -- CreateTable
 CREATE TABLE "Earning" (
     "id" TEXT NOT NULL,
-    "day" INTEGER NOT NULL,
-    "month" INTEGER NOT NULL,
-    "year" INTEGER NOT NULL,
+    "date" TEXT NOT NULL,
     "amount" INTEGER NOT NULL,
     "belongTo" TEXT NOT NULL,
 

@@ -23,9 +23,7 @@ model Char {
 
 model Earning {
   id       String @id @default(uuid())
-  day      Int
-  month    Int
-  year     Int
+  date     String //yyyy-mm-dd
   amount   Int
   belongTo String
   char     Char   @relation(fields: [belongTo], references: [id], onDelete: Cascade, onUpdate: Cascade)

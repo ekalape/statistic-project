@@ -1,4 +1,4 @@
-import { temp_chars } from '../assets/temp_chars';
+import { formatDate } from '../utils/formatDate';
 import { IChar, IEarning } from '../utils/interfaces';
 
 const baseURL = 'http://localhost:4040/';
@@ -20,8 +20,6 @@ export async function getAllCharacters() {
 }
 
 export async function getAllProfits(startDate: Date, endDate: Date, chars: IChar[]) {
-  const ids = chars.map((ch) => ch.id);
-
   const res = await fetch(baseURL + 'stats', {
     method: 'GET',
     headers: {
@@ -29,14 +27,17 @@ export async function getAllProfits(startDate: Date, endDate: Date, chars: IChar
     },
   }).catch();
   const allEarnings: IEarning[] = await res.json();
-  const earningsInTime = allEarnings
-    .filter((pr) => {
+  let earningsInTime = allEarnings.filter((pr) => {
+    const date = new Date(pr.date);
+    return date.getTime() >= startDate.getTime() && date.getTime() <= endDate.getTime();
+  });
+
+  if (chars.length > 0) {
+    const ids = chars.map((ch) => ch.id);
+    earningsInTime = earningsInTime.filter((pr) => {
       return ids.includes(pr.belongTo);
-    })
-    .filter((pr) => {
-      const date = new Date(`${pr.year}-${pr.month}-${pr.day}`);
-      return date.getTime() >= startDate.getTime() && date.getTime() <= endDate.getTime();
     });
+  }
   return earningsInTime;
 }
 
@@ -61,16 +62,16 @@ export async function addNewCharacter(
   }
 }
 
-export async function addNewEarning(charId: string, day: Date, amount: number) {
+export async function addNewEarning(charId: string, date: Date, amount: number) {
+  console.log('date inside apicall -> ', date);
   try {
-    const dateArr = [day.getDate(), day.getMonth() + 1, day.getFullYear()];
     const res = await fetch(baseURL + 'stats', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
-        dayData: { day: +dateArr[0], month: +dateArr[1], year: +dateArr[2] },
+        date: formatDate(date),
         amount,
         belongTo: charId,
       }),

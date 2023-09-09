@@ -9,20 +9,25 @@ export class StatsService {
   constructor(private readonly db: DbService) { }
 
   async create(createStatDto: CreateStatDto) {
-    const { dayData, amount, belongTo } = createStatDto;
-    console.log(dayData)
-    let dd = dayData
-    if (!dayData) {
-      const today = new Date()
-      dd = { day: today.getDate(), month: today.getMonth(), year: today.getFullYear() }
-    }
+    const { date, amount, belongTo } = createStatDto;
+    console.log(date)
+
     return await this.db.earning.create({
-      data: { amount, belongTo, day: dd.day, month: dd.month, year: dd.year }
+      data: { date, amount, belongTo }
     });
   }
 
   async findAll() {
-    return await this.db.earning.findMany({});
+    return await this.db.earning.findMany({
+      include: {
+        char: {
+          select: {
+            name: true,
+            server: true
+          }
+        }
+      }
+    });
   }
 
   async findOneByChar(id: string) {

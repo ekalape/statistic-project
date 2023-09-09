@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsPositive, Max, ValidateNested } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsPositive, IsString, Max, ValidateNested } from 'class-validator';
 class DayDataDto {
     @IsPositive()
     @Max(31)
@@ -15,9 +15,8 @@ class DayDataDto {
 
 export class CreateStatDto {
 
-    @ValidateNested()
-    @Type(() => DayDataDto)
-    dayData: DayDataDto
+    // @IsDateString({ strict: true })
+    date: string //yyyy-mm-dd
 
     @IsNotEmpty()
     amount: number

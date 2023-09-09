@@ -3,11 +3,11 @@ import { ServerContainer } from '../ServerContainer';
 import './style.scss';
 import { useEffect, useState } from 'react';
 import { useCharsStore } from '../../store/store';
-import { getToday, transformDate } from '../../utils/getToday';
 import { IEarning } from '../../utils/interfaces';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { DateChooser } from '../DateChooser';
 import { addNewEarning } from '../../store/apiCalls';
+import { formatDate } from '../../utils/formatDate';
 
 const today = new Date();
 
@@ -30,7 +30,9 @@ function AddEarnContainer() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState,
+    formState: { errors, isSubmitSuccessful },
   } = useForm();
 
   function handleDate(value: Date) {
@@ -40,21 +42,13 @@ function AddEarnContainer() {
 
   const handleEarningSubmit: SubmitHandler<FieldValues> = async (data) => {
     const { date, profit } = data as IEarningFormInput;
+    console.log('date --> ', date);
     if (!date) {
       setDay(today);
     } else {
       setDay(new Date(date));
     }
     if (selChar && profit) {
-      const dateArr = [day.getDate(), day.getMonth() + 1, day.getFullYear()];
-      const earningData: IEarning = {
-        day: +dateArr[0],
-        month: +dateArr[1],
-        year: +dateArr[2],
-        amount: +profit,
-        belongTo: selChar.id,
-      };
-      console.log(earningData);
       if (selChar && profit) {
         const success = await addNewEarning(selChar.id, day, +profit);
         if (success) {
@@ -69,7 +63,13 @@ function AddEarnContainer() {
 
   useEffect(() => {
     console.log('chars changed', selChar?.earnings);
-  }, [chars]);
+  }, [selChar]);
+
+  useEffect(() => {
+    if (formState.isSubmitSuccessful) {
+      reset({ profit: '' });
+    }
+  }, [formState, reset]);
 
   useEffect(() => {
     setSelServer(selChar?.server || 'all');
