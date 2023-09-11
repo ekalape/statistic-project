@@ -1,4 +1,4 @@
-import { Button, Container } from 'react-bootstrap';
+import { Button, Container, Table } from 'react-bootstrap';
 import { ServerContainer } from '../ServerContainer';
 
 import { useEffect, useMemo, useState } from 'react';
@@ -6,7 +6,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { DateChooser } from '../DateChooser';
 import { useCharsStore } from '../../store/store';
 import { getAllProfits } from '../../store/apiCalls';
-import { RoundChart } from '../Charts';
+import { ChartsContainer, RoundChart } from '../Charts';
+import { IChar } from '../../utils/interfaces';
 
 const defDate = new Date();
 
@@ -24,6 +25,9 @@ function StatsContainer() {
 
   const [selServer, setSelServer] = useState(servToSelect);
   const [fullProfit, setFullProfit] = useState(0);
+  const [fullProfitTable, setFullProfitTable] = useState<
+    { charname: string; amount: number }[] | null
+  >(null);
 
   function handleServerChange(value: string) {
     setSelServer(value);
@@ -52,6 +56,7 @@ function StatsContainer() {
 
   useEffect(() => {
     getAllProfits(fromDay, toDay, store.selectedChars).then((data) => {
+      //table
       setFullProfit(data.reduce((acc, p) => acc + p.amount, 0));
     });
   }, [store.selectedChars, fromDay, toDay]);
@@ -75,8 +80,9 @@ function StatsContainer() {
           Today
         </Button>
       </div>
-      <div> All profits: {fullProfit}</div>
-      <RoundChart startDate={fromDay} endDate={toDay} />
+      <div className='w-25 m-5'> Full profits: {fullProfit}</div>
+      {/* <Table>{selChars.}</Table> */}
+      <ChartsContainer startDate={fromDay} endDate={toDay} />
     </Container>
   );
 }

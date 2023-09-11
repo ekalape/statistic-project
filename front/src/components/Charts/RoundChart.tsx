@@ -1,53 +1,34 @@
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useCharsStore } from '../../store/store';
 
-import { Cell, Pie, PieChart } from 'recharts';
-import { getRandomColor } from '../../utils/colors';
+import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
+import { chartEarningsType } from './ChartsContainer';
 
 type RoundChartType = {
-  startDate: Date;
-  endDate: Date;
+  confrontedProfits: chartEarningsType[];
+  colors: string[];
 };
 
-type chartEarningsType = {
-  charname: string;
-  earnings: number;
-};
+const RoundChart = (props: RoundChartType) => {
+  const { confrontedProfits, colors } = props;
+  const [data, setData] = useState<chartEarningsType[]>(confrontedProfits);
 
-const RoundChart = memo((props: RoundChartType) => {
-  const { startDate, endDate } = props;
-  const chars = useCharsStore((store) => store.chars);
-
-  const confrontedProfits = chars.map((ch) => ({
-    charname: ch.name,
-    earnings: ch.earnings.reduce((acc, er) => {
-      const earnDate = new Date(er.date);
-      if (earnDate >= startDate && earnDate <= endDate) return acc + er.amount;
-      else return acc;
-    }, 0),
-  }));
-
-  const colors = useMemo(() => {
-    const len = chars.length;
-    const colorsArr: string[] = [];
-    for (let i = 0; i < len; i++) {
-      colorsArr.push(getRandomColor());
-    }
-    return colorsArr;
-  }, [chars]);
+  useEffect(() => {
+    setData(confrontedProfits);
+    console.log('roundChar', data);
+  }, [confrontedProfits]);
 
   return (
-    <div>
-      <PieChart width={530} height={250}>
+    <ResponsiveContainer minWidth={46} aspect={2}>
+      <PieChart>
         <Pie
-          data={confrontedProfits}
+          data={data}
           dataKey='earnings'
           nameKey='charname'
           cx='50%'
           cy='50%'
-          innerRadius={50}
-          outerRadius={80}
-          fill='#82ca9d'
+          innerRadius={30}
+          outerRadius={70}
           label={(entry) => `${entry.charname}: ${entry.earnings}`}
           isAnimationActive={true}>
           {confrontedProfits.map((entry, index) => (
@@ -55,8 +36,8 @@ const RoundChart = memo((props: RoundChartType) => {
           ))}
         </Pie>
       </PieChart>
-    </div>
+    </ResponsiveContainer>
   );
-});
+};
 
 export default RoundChart;
