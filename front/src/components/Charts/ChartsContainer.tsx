@@ -79,7 +79,7 @@ const ChartsContainer = (props: ChartPropsType) => {
   }, [chars.length]);
 
   return (
-    <div className={`d-flex flex-column flex-md-row w-100`}>
+    <div className={`d-flex flex-column flex-md-row w-100 p-3`}>
       {loadedLine && profitsByChars && (
         <LineCharsForChar confrontedProfits={profitsByChars} colors={colors} dates={dates} />
       )}{' '}

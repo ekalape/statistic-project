@@ -32,7 +32,7 @@ function LineCharsForChar(props: LineChartPropsType) {
     setData(combinedData);
   }, [confrontedProfits]);
   return (
-    <ResponsiveContainer minWidth={48} aspect={2}>
+    <ResponsiveContainer minWidth={46} aspect={2}>
       <LineChart>
         <CartesianGrid strokeDasharray='3 3' />
         <XAxis dataKey='date' type='category' allowDuplicatedCategory={false} />

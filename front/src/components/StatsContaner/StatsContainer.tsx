@@ -1,4 +1,4 @@
-import { Button, Container, Table } from 'react-bootstrap';
+import { Accordion, Button, Container, Table } from 'react-bootstrap';
 import { ServerContainer } from '../ServerContainer';
 
 import { useEffect, useMemo, useState } from 'react';
@@ -7,6 +7,7 @@ import { DateChooser } from '../DateChooser';
 import { useCharsStore } from '../../store/store';
 import { getAllProfits } from '../../store/apiCalls';
 import { ChartsContainer, RoundChart } from '../Charts';
+import { flatMap, groupBy, map as lodashMap, range, sumBy } from 'lodash';
 import { IChar } from '../../utils/interfaces';
 
 const defDate = new Date();
@@ -26,7 +27,7 @@ function StatsContainer() {
   const [selServer, setSelServer] = useState(servToSelect);
   const [fullProfit, setFullProfit] = useState(0);
   const [fullProfitTable, setFullProfitTable] = useState<
-    { charname: string; amount: number }[] | null
+    { charname: string | undefined; profit: number }[] | null
   >(null);
 
   function handleServerChange(value: string) {
@@ -57,6 +58,13 @@ function StatsContainer() {
   useEffect(() => {
     getAllProfits(fromDay, toDay, store.selectedChars).then((data) => {
       //table
+      const charsDataArray = groupBy(data, 'belongTo');
+      const mapped = lodashMap(charsDataArray, (group, charId) => ({
+        charname: group[0].char?.name,
+        profit: sumBy(group, 'amount'),
+      }));
+      setFullProfitTable(mapped);
+
       setFullProfit(data.reduce((acc, p) => acc + p.amount, 0));
     });
   }, [store.selectedChars, fromDay, toDay]);
@@ -64,7 +72,8 @@ function StatsContainer() {
   return (
     <Container fluid className='border flex-grow-1 pt-1 d-flex flex-column align-items-center'>
       <ServerContainer selectedServer={selServer} handleServerChange={handleServerChange} />
-      <div className='w-50 d-flex flex-md-row flex-column gap-2 pt-2 justify-content-center align-items-start ms-sm-0 ms-n5'>
+      <div
+        className={`w-50 d-flex flex-sm-row flex-column gap-2 pt-2 justify-content-center align-items-center align-items-sm-start ms-sm-0 ms-n5`}>
         <Button
           variant='outline-primary'
           className='fs-7 fst-italic'
@@ -80,8 +89,25 @@ function StatsContainer() {
           Today
         </Button>
       </div>
-      <div className='w-25 m-5'> Full profits: {fullProfit}</div>
-      {/* <Table>{selChars.}</Table> */}
+      <Accordion className='col-lg-3 col-md-6 col-sm-9 m-3'>
+        <Accordion.Item eventKey='0'>
+          <Accordion.Header>{`Full profits: ${fullProfit}`}</Accordion.Header>
+          <Accordion.Body>
+            <Table striped>
+              <tbody>
+                {fullProfitTable?.map((pr) => (
+                  <tr>
+                    <td>{pr.charname}</td>
+                    <td>{pr.profit}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+      {/* {fullProfitTable} */}
+
       <ChartsContainer startDate={fromDay} endDate={toDay} />
     </Container>
   );
