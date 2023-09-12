@@ -1,5 +1,5 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { useCharsStore } from '../../store/store';
+import { useEffect, useState } from 'react';
+
 
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
 import { chartEarningsType } from './ChartsContainer';

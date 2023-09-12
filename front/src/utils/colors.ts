@@ -6,3 +6,4 @@ export function getRandomColor(): string {
     }
     return color;
 }
+

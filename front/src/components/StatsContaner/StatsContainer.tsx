@@ -75,6 +75,12 @@ function StatsContainer() {
         <Button
           variant='outline-primary'
           className='fs-7 fst-italic'
+          onClick={() => handleFromDate(new Date('2023-09-13'))}>
+          Start
+        </Button>
+        <Button
+          variant='outline-primary'
+          className='fs-7 fst-italic'
           onClick={() => handleFromDate(sign)}>
           Sign
         </Button>
@@ -104,7 +110,6 @@ function StatsContainer() {
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
-      {/* {fullProfitTable} */}
 
       <ChartsContainer startDate={fromDay} endDate={toDay} />
     </Container>

@@ -4,8 +4,6 @@ import {
   AreaChart,
   CartesianGrid,
   Legend,
-  Line,
-  LineChart,
   ResponsiveContainer,
   XAxis,
   YAxis,
@@ -47,9 +45,9 @@ function LineCharsForChar(props: LineChartPropsType) {
             data={s.earnings}
             name={s.charname}
             key={s.charname}
-            stroke={colors[idx]}
+            stroke={colors[idx % colors.length]}
             strokeWidth={2}
-            fill={colors[idx]}
+            fill={colors[idx % colors.length]}
           />
         ))}
       </AreaChart>

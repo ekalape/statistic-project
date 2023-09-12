@@ -136,13 +136,3 @@ const getFullProfitsByDate = (chars: IChar[], startDate: Date, endDate: Date) =>
 };
 
 export default ChartsContainer;
-
-/* 
-{
-  date:string;
-  profits:{
-    charname:string,
-    amount:number
-  }[]
-}
-*/
