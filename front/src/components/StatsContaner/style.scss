@@ -1,0 +1,6 @@
+.fixed-height {
+  height: 40px;
+  @media (max-width: 575px) {
+    height: 180px;
+  }
+}

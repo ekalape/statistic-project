@@ -9,23 +9,24 @@ $font-sizes: (
 /* size */
 
 $theme-colors: (
-  'info': #51bfff,
+  'info': #ffe600,
   'primary': #ffa8cc,
   'secondary': #a15374,
   'danger': #ff0000,
   'success': #126402,
 );
 $info: #51bfff;
-$primary: #ffa8cc;
-$secondary: #a15374;
+$primary: #fdb0d0;
+$secondary: #8f4765;
+$secondary1: #58273b;
 
 $body-color-dark: $primary;
-$body-bg-dark: rgb(19, 9, 16);
+$body-bg-dark: rgb(12, 6, 10);
 $body-secondary-color-dark: rgba($body-color-dark, 0.75);
 $body-secondary-bg-dark: #0a0006;
-$body-tertiary-color-dark: rgba($body-color-dark, 0.5);
+$body-tertiary-color-dark: rgba($body-color-dark, 0.6);
 //$body-tertiary-bg-dark: mix($gray-800, $gray-900, 50%);
-$body-tertiary-bg-dark: mix($body-bg-dark, #000, 60%);
+$body-tertiary-bg-dark: mix($body-bg-dark, #000, 50%);
 $navbar-color: $primary;
 
 $body-emphasis-color-dark: mix($primary, #ff2f2f, 90%);

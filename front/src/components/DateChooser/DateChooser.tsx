@@ -1,5 +1,7 @@
 import { memo, useState } from 'react';
 import { Button } from 'react-bootstrap';
+import DatePicker from 'react-datepicker';
+import './style.scss';
 
 type DateChooserType = {
   label: 'From' | 'to' | 'The day is' | 'Sign';
@@ -13,8 +15,10 @@ const DateChooser = memo((props: DateChooserType) => {
   const [showChangeDate, setShowChangeDate] = useState(false);
   const today = new Date();
 
-  function changeDate(value: string) {
-    const date = new Date(value);
+  function changeDate(value: Date | null) {
+    let date: Date;
+    if (value === null) date = today;
+    else date = value;
     if (date > today) {
       handleDate(today);
     } else handleDate(date);
@@ -31,12 +35,13 @@ const DateChooser = memo((props: DateChooserType) => {
         <i>{label}</i> <b>{day.toLocaleDateString()}</b>
       </Button>
       {showChangeDate && (
-        <input
+        <DatePicker selected={today} onChange={(e) => changeDate(e)} inline />
+        /*  <input
           type='Date'
           className={`ps-2 pe-2 border border-secondary rounded text-info bg-primary-subtle ${
             size === 'sm' ? 'position-absolute top-110 ' : 'position-absolute bottom-110'
           }`}
-          onChange={(e) => changeDate(e.currentTarget?.value)}></input>
+          onChange={(e) => changeDate(e.currentTarget?.value)}></input> */
       )}
     </div>
   );

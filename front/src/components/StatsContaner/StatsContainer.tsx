@@ -1,14 +1,12 @@
 import { Accordion, Button, Container, Table } from 'react-bootstrap';
 import { ServerContainer } from '../ServerContainer';
-
 import { useEffect, useMemo, useState } from 'react';
-
 import { DateChooser } from '../DateChooser';
 import { useCharsStore } from '../../store/store';
 import { getAllProfits } from '../../store/apiCalls';
-import { ChartsContainer, RoundChart } from '../Charts';
-import { flatMap, groupBy, map as lodashMap, range, sumBy } from 'lodash';
-import { IChar } from '../../utils/interfaces';
+import { ChartsContainer } from '../Charts';
+import { groupBy, map as lodashMap, sumBy } from 'lodash';
+import './style.scss';
 
 const defDate = new Date();
 
@@ -73,7 +71,7 @@ function StatsContainer() {
     <Container fluid className='border flex-grow-1 pt-1 d-flex flex-column align-items-center'>
       <ServerContainer selectedServer={selServer} handleServerChange={handleServerChange} />
       <div
-        className={`w-50 d-flex flex-sm-row flex-column gap-2 pt-2 justify-content-center align-items-center align-items-sm-start ms-sm-0 ms-n5`}>
+        className={`w-50 d-flex flex-sm-row flex-column gap-2 pt-2 justify-content-center align-items-center align-items-sm-start ms-sm-0 ms-n5 fixed-height`}>
         <Button
           variant='outline-primary'
           className='fs-7 fst-italic'
@@ -96,7 +94,7 @@ function StatsContainer() {
             <Table striped>
               <tbody>
                 {fullProfitTable?.map((pr) => (
-                  <tr>
+                  <tr key={pr.charname}>
                     <td>{pr.charname}</td>
                     <td>{pr.profit}</td>
                   </tr>

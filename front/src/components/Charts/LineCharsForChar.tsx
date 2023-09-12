@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
+  Area,
+  AreaChart,
   CartesianGrid,
   Legend,
   Line,
@@ -32,23 +34,25 @@ function LineCharsForChar(props: LineChartPropsType) {
     setData(combinedData);
   }, [confrontedProfits]);
   return (
-    <ResponsiveContainer minWidth={46} aspect={2}>
-      <LineChart>
+    <ResponsiveContainer minWidth={44} aspect={2}>
+      <AreaChart>
         <CartesianGrid strokeDasharray='3 3' />
         <XAxis dataKey='date' type='category' allowDuplicatedCategory={false} />
         <YAxis dataKey='amount' />
         <Legend />
         {data?.map((s, idx) => (
-          <Line
+          <Area
+            type='monotone'
             dataKey='amount'
             data={s.earnings}
             name={s.charname}
             key={s.charname}
             stroke={colors[idx]}
             strokeWidth={2}
+            fill={colors[idx]}
           />
         ))}
-      </LineChart>
+      </AreaChart>
     </ResponsiveContainer>
   );
 }
