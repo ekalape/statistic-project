@@ -3,7 +3,6 @@ import { ServerContainer } from '../ServerContainer';
 import './style.scss';
 import { useEffect, useState } from 'react';
 import { useCharsStore } from '../../store/store';
-import { IEarning } from '../../utils/interfaces';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { DateChooser } from '../DateChooser';
 import { addNewEarning } from '../../store/apiCalls';

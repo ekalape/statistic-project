@@ -9,7 +9,7 @@ services:
       - .env
     depends_on:
       - pgsdb
-    restart: unless-stopped
+    restart: always
     environment:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@pgsdb:${DB_PORT}/pgsdb?schema=public"
     volumes:
@@ -30,7 +30,7 @@ services:
       context: .
     env_file:
       - .env
-    restart: unless-stopped
+    restart: always
     expose:
       - ${DB_PORT}
     ports:

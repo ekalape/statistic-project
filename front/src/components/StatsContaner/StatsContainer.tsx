@@ -57,7 +57,7 @@ function StatsContainer() {
     getAllProfits(fromDay, toDay, store.selectedChars).then((data) => {
       //table
       const charsDataArray = groupBy(data, 'belongTo');
-      const mapped = lodashMap(charsDataArray, (group, charId) => ({
+      const mapped = lodashMap(charsDataArray, (group, _) => ({
         charname: group[0].char?.name,
         profit: sumBy(group, 'amount'),
       }));

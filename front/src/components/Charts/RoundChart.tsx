@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 
-
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
 import { chartEarningsType } from './ChartsContainer';
 
@@ -31,7 +30,7 @@ const RoundChart = (props: RoundChartType) => {
           outerRadius={70}
           label={(entry) => `${entry.charname}: ${entry.earnings}`}
           isAnimationActive={true}>
-          {confrontedProfits.map((entry, index) => (
+          {confrontedProfits.map((_, index) => (
             <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
           ))}
         </Pie>
