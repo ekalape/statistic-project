@@ -1,8 +1,8 @@
 import './style.scss';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Navbar, Container, Nav, Badge } from 'react-bootstrap';
 import wowLogo from '../../assets/w-icon.png';
-import { useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 import { DateChooser } from '../DateChooser';
 import { useCharsStore } from '../../store/store';
@@ -19,6 +19,7 @@ function Header() {
   function handleTimeSign(value: Date) {
     setSign(value);
   }
+  useEffect(()=>{console.log(' inside header lastDestination --> ', lastDestination)},[getPathname])
 
   const displayedToday = new Date();
   const changeLogoName = (key: string | null) => {
@@ -44,12 +45,16 @@ function Header() {
             activeKey={logoName}
             fill
             onSelect={(key) => changeLogoName(key)}>
-            <Nav.Link eventKey='Add earning' href='/add'>
+            <NavLink
+              /* eventKey='Add earning' */ to='/add'
+              className={({ isActive }) => (isActive ? 'active' : 'notActive')}>
               Add earning
-            </Nav.Link>
-            <Nav.Link eventKey='Statistics' href='/stats'>
+            </NavLink>
+            <NavLink
+              /* eventKey='Statistics' */ to='/stats'
+              className={({ isActive }) => (isActive ? 'active' : 'notActive')}>
               Statistics
-            </Nav.Link>
+            </NavLink>
           </Nav>
         </Navbar.Collapse>
         <div className='w-25 order-0 order-md-2 d-flex align-items-center justify-content-end'>

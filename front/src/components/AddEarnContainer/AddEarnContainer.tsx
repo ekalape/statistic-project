@@ -40,7 +40,6 @@ function AddEarnContainer() {
   const handleEarningSubmit: SubmitHandler<FieldValues> = async (data) => {
     const { profit } = data as IEarningFormInput;
 
-    console.log('date --> ', day.toLocaleDateString());
     if (selChar && profit) {
       if (selChar && profit) {
         const success = await addNewEarning(selChar.id, day, +profit);
@@ -55,10 +54,6 @@ function AddEarnContainer() {
   };
 
   useEffect(() => {
-    console.log('chars changed', selChar?.earnings);
-  }, [selChar]);
-
-  useEffect(() => {
     if (isSubmitSuccessful) {
       reset({ profit: '' });
     }
@@ -66,7 +61,6 @@ function AddEarnContainer() {
 
   useEffect(() => {
     setSelServer(selChar?.server || 'all');
-    console.log('selChar changed', selChar?.server);
   }, [selChar]);
 
   return (

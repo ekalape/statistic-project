@@ -1,14 +1,17 @@
+import { useLocation } from 'react-router-dom';
 import './App.scss';
 
-import { BrowserRouter } from 'react-router-dom';
 import Router from './routes';
+import { useEffect } from 'react';
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Router />
-    </BrowserRouter>
-  );
+  const getPathname = useLocation().pathname;
+
+  useEffect(() => {
+    console.log(' inside app getPathname --> ', getPathname);
+  }, [getPathname]);
+
+  return <Router />;
 }
 
 export default App;

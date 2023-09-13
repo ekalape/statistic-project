@@ -48,4 +48,26 @@ $position-values: (
 $transition: 0.4s;
 $enable-negative-margins: true;
 
+a {
+  display: block;
+  padding: 3px;
+  color: var(--color-f-primary-light);
+  transition: 0.3s;
+  padding-right: 10px;
+}
+a:visited {
+  color: var(--color-f-primary-light);
+}
+a:hover {
+  color: $primary;
+}
+a.active {
+  color: $primary;
+  font-weight: bold;
+  pointer-events: none;
+}
+a.notActive {
+  color: $secondary;
+}
+
 @import 'bootstrap/scss/bootstrap';

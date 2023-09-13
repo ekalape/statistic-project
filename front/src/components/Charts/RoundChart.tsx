@@ -14,7 +14,6 @@ const RoundChart = (props: RoundChartType) => {
 
   useEffect(() => {
     setData(confrontedProfits);
-    console.log('roundChar', data);
   }, [confrontedProfits]);
 
   return (

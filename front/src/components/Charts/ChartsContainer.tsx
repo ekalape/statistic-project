@@ -131,7 +131,7 @@ const getFullProfitsByDate = (chars: IChar[], startDate: Date, endDate: Date) =>
       amount: sumBy(earnings, 'amount'),
     })),
   };
-  console.log('gggdgdhd ', transformedData);
+
   return transformedData;
 };
 
