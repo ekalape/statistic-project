@@ -7,10 +7,16 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { DateChooser } from '../DateChooser';
 import { useCharsStore } from '../../store/store';
 
+const displayedToday = new Date();
+
 function Header() {
-  const getPathname = useLocation().pathname;
-  const lastDestination = getPathname === '/stats' ? 'Statistics' : 'Add earning';
-  const [logoName, setLogoName] = useState(lastDestination);
+  const loc = useLocation();
+  const getPathname = loc.pathname;
+  //const lastDestination = getPathname === '/stats' ? 'Statistics' : 'Add earning';
+  const [destination, setDestination] = useState(
+    getPathname === '/stats' ? 'Statistics' : 'Add earning',
+  );
+  const [logoName, setLogoName] = useState(destination);
 
   const sign = new Date(useCharsStore((state) => state.timeSign));
 
@@ -19,13 +25,16 @@ function Header() {
   function handleTimeSign(value: Date) {
     setSign(value);
   }
-  useEffect(()=>{console.log(' inside header lastDestination --> ', lastDestination)},[getPathname])
 
-  const displayedToday = new Date();
-  const changeLogoName = (key: string | null) => {
-    let text = key || 'Add earning';
-    setLogoName(text);
-  };
+  useEffect(() => {
+    setDestination(loc.pathname === '/stats' ? 'Statistics' : 'Add earning');
+    console.log('loc', loc);
+  }, [loc]);
+  useEffect(() => {
+    setLogoName(destination);
+    console.log('destination', destination);
+  }, [destination]);
+
   return (
     <Navbar expand='md' className='bg-body-tertiary ' fixed='top'>
       <Container className='justify-content-space-between'>
@@ -43,16 +52,11 @@ function Header() {
           <Nav
             className='justify-content-space-between justify-content-end'
             activeKey={logoName}
-            fill
-            onSelect={(key) => changeLogoName(key)}>
-            <NavLink
-              /* eventKey='Add earning' */ to='/add'
-              className={({ isActive }) => (isActive ? 'active' : 'notActive')}>
+            fill>
+            <NavLink to='/add' className={({ isActive }) => (isActive ? 'active' : 'notActive')}>
               Add earning
             </NavLink>
-            <NavLink
-              /* eventKey='Statistics' */ to='/stats'
-              className={({ isActive }) => (isActive ? 'active' : 'notActive')}>
+            <NavLink to='/stats' className={({ isActive }) => (isActive ? 'active' : 'notActive')}>
               Statistics
             </NavLink>
           </Nav>
