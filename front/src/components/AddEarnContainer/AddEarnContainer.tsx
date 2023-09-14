@@ -64,7 +64,9 @@ function AddEarnContainer() {
   }, [selChar]);
 
   return (
-    <Container fluid className='border flex-grow-1 d-flex flex-column align-items-center '>
+    <Container
+      fluid
+      className='border-top border-secondary1 flex-grow-1 d-flex flex-column align-items-center '>
       <ServerContainer
         selectedServer={selServer}
         handleServerChange={(value) => {

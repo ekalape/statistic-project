@@ -16,7 +16,7 @@ function ServerContainer({ selectedServer, handleServerChange }: ServerContainer
   }
 
   return (
-    <div className='server-container'>
+    <div className='server-container pt-1'>
       <ButtonGroup className='servers-radioGroup'>
         {servs.map((s, idx) => (
           <ToggleButton
