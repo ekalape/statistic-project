@@ -1,0 +1,11 @@
+.drop-down-char-menu {
+  min-width: 100%;
+  z-index: 6;
+  left: -40px;
+  top: 20px;
+  background: #58273b;
+  @media (max-width: 576px) {
+    left: 12px;
+    top: -39px;
+  }
+}

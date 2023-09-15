@@ -1,4 +1,4 @@
-import { Button, Card, Form, Modal } from 'react-bootstrap';
+import { Button, Card, Dropdown, Form, Modal } from 'react-bootstrap';
 import './style.scss';
 import hordeIcon from '../../assets/horde-icon.png';
 import alianceIcon from '../../assets/aliance-icon.png';
@@ -10,6 +10,8 @@ import { AddCardBtn } from '../AddCardBtn';
 import { EAddCharInputs } from '../../utils/constants';
 import { useForm } from 'react-hook-form';
 import { addNewCharacter } from '../../store/apiCalls';
+import dropDownIcon from '../../assets/drop-down-icon-pink.png';
+import { DropDownCharMenu } from '../DropDownCharMenu';
 
 function CharsContainer({ stat }: { stat: boolean }) {
   const charsStore = useCharsStore();
@@ -26,6 +28,7 @@ function CharsContainer({ stat }: { stat: boolean }) {
     : useCharsStore((state) => state.selectedSingleChar);
 
   const [showAddModal, setShowAddModal] = useState(false);
+  const [contextMenuChar, setOpenContextMenu] = useState<IChar | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
 
   const addChar = async () => {
@@ -52,6 +55,11 @@ function CharsContainer({ stat }: { stat: boolean }) {
     if (stat) charsStore.selectChar(char);
     else charsStore.setSelectedSingleChar(char);
   };
+  const handleContextMenu = (char: IChar, eventKey: string) => {
+    console.log('openContextMenu ', contextMenuChar);
+    console.log('eventKey ', eventKey);
+    setOpenContextMenu(null);
+  };
 
   const bgColor = useCallback(
     (ch: IChar) => {
@@ -77,23 +85,45 @@ function CharsContainer({ stat }: { stat: boolean }) {
   return (
     <div className='char-container'>
       {chars.map((ch) => (
-        <Card
-          key={ch.id}
-          className='char-card'
-          style={{
-            borderColor: `${ch.fraction === 'horde' ? 'red' : 'lightBlue'}`,
-            background: `${bgColor(ch)}`,
-          }}
-          onClick={() => handleCharSelect(ch)}>
-          <Card.Img
-            variant='top'
-            src={ch.fraction === 'horde' ? hordeIcon : alianceIcon}
-            style={{ width: '50px', height: '50px' }}
-          />
-
-          <Card.Text style={{ fontSize: '0.8rem' }}>{ch.name}</Card.Text>
-        </Card>
+        <div className='card-container' onMouseLeave={() => setOpenContextMenu(null)}>
+          <Card
+            key={ch.id}
+            className='char-card'
+            style={{
+              borderColor: `${ch.fraction === 'horde' ? 'red' : 'lightBlue'}`,
+              background: `${bgColor(ch)}`,
+            }}
+            onClick={(e) => {
+              console.log('e.target', e.currentTarget);
+              if (!(e.target as HTMLElement).classList.contains('drop-indicator')) {
+                console.log('!contains');
+                handleCharSelect(ch);
+              }
+            }}>
+            <Card.Img
+              variant='top'
+              src={ch.fraction === 'horde' ? hordeIcon : alianceIcon}
+              style={{ width: '50px', height: '50px' }}
+            />
+            <Card.Text style={{ fontSize: '0.8rem' }}>{ch.name}</Card.Text>
+          </Card>
+          <div
+            className='bg-secondary1 position-absolute char-drop-indicator'
+            onClick={() => {
+              setOpenContextMenu(ch);
+            }}>
+            <img style={{ width: '50%', paddingBottom: '8px' }} src={dropDownIcon}></img>
+          </div>
+          {contextMenuChar && (
+            <DropDownCharMenu
+              show={contextMenuChar && contextMenuChar.id === ch.id ? true : false}
+              char={ch}
+              handleContectMenu={handleContextMenu}
+            />
+          )}
+        </div>
       ))}
+
       <AddCardBtn handleClick={() => setShowAddModal(true)} size='40px' text='+' />
       <Modal show={showAddModal} onHide={() => setShowAddModal(false)}>
         <Modal.Header closeButton>
