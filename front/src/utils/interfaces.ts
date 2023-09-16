@@ -28,7 +28,7 @@ export interface ICharsStore {
     getChars: () => void
     selectChar: (selChar: IChar) => void
     selectAllChars: (newchars: IChar[]) => void
-    setSelectedSingleChar: (char: IChar) => void
+    setSelectedSingleChar: (char: IChar | null) => void
     setTimeSign: (sign: Date) => void
     updateSelectedChar: (charId: string) => void
 

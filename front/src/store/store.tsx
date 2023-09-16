@@ -20,19 +20,22 @@ const useCharsStore = create<ICharsStore>()(
         set({ selectedChars: newchars });
       },
 
-      selectChar: (selChar: IChar) => {
-        set((state) => {
-          const ch = state.selectedChars.find((c) => c.id === selChar.id);
-          if (ch) {
-            return {
-              selectedChars: state.selectedChars.filter((sc) => sc.id !== selChar.id),
-            };
-          } else {
-            return {
-              selectedChars: [...state.selectedChars, selChar],
-            };
-          }
-        });
+      selectChar: (selChar: IChar | null) => {
+        if (selChar === null) set({ selectedSingleChar: null });
+        else {
+          set((state) => {
+            const ch = state.selectedChars.find((c) => c.id === selChar.id);
+            if (ch) {
+              return {
+                selectedChars: state.selectedChars.filter((sc) => sc.id !== selChar.id),
+              };
+            } else {
+              return {
+                selectedChars: [...state.selectedChars, selChar],
+              };
+            }
+          });
+        }
       },
       updateSelectedChar: async (charId: string) => {
         set({
@@ -40,8 +43,11 @@ const useCharsStore = create<ICharsStore>()(
         });
       },
 
-      setSelectedSingleChar: (char: IChar) => {
-        set((state) => ({ ...state, selectedSingleChar: char }));
+      setSelectedSingleChar: (char: IChar | null) => {
+        if (char === null) set({ selectedSingleChar: null });
+        else {
+          set((state) => ({ ...state, selectedSingleChar: char }));
+        }
       },
 
       setTimeSign: (sign: Date) => {

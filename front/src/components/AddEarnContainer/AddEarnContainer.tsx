@@ -69,6 +69,7 @@ function AddEarnContainer() {
       className='border-top border-secondary1 flex-grow-1 d-flex flex-column align-items-center '>
       <ServerContainer
         selectedServer={selServer}
+        type="one"
         handleServerChange={(value) => {
           setSelServer(value);
           console.log('server -> ', value);

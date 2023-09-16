@@ -71,7 +71,11 @@ function StatsContainer() {
     <Container
       fluid
       className='border-top border-secondary1 flex-grow-1 pt-1 d-flex flex-column align-items-center'>
-      <ServerContainer selectedServer={selServer} handleServerChange={handleServerChange} />
+      <ServerContainer
+        selectedServer={selServer}
+        handleServerChange={handleServerChange}
+        type='many'
+      />
       <div
         className={`w-50 d-flex flex-sm-row flex-column gap-2 pt-2 justify-content-center align-items-center align-items-sm-start ms-sm-0 ms-n5 fixed-height`}>
         <Button

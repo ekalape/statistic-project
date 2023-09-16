@@ -1,64 +1,67 @@
-import { Button, Card, Dropdown, Form, Modal } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import './style.scss';
 import hordeIcon from '../../assets/horde-icon.png';
 import alianceIcon from '../../assets/aliance-icon.png';
 import { useCharsStore } from '../../store/store';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { IChar } from '../../utils/interfaces';
 import { AddCardBtn } from '../AddCardBtn';
-import { EAddCharInputs } from '../../utils/constants';
-import { useForm } from 'react-hook-form';
-import { addNewCharacter } from '../../store/apiCalls';
+import { addNewCharacter, updateCharacter } from '../../store/apiCalls';
 import dropDownIcon from '../../assets/drop-down-icon-pink.png';
 import { DropDownCharMenu } from '../DropDownCharMenu';
+import CharFormModal from './CharFormModal';
 
 function CharsContainer({ stat }: { stat: boolean }) {
   const charsStore = useCharsStore();
   const chars = useCharsStore((state) => state.chars);
-  /*   const addNewChar = useCharsStore((state) => state.addNewChar); */
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
   const selChars = stat
     ? useCharsStore((state) => state.selectedChars)
     : useCharsStore((state) => state.selectedSingleChar);
 
   const [showAddModal, setShowAddModal] = useState(false);
-  const [contextMenuChar, setOpenContextMenu] = useState<IChar | null>(null);
-  const formRef = useRef<HTMLFormElement | null>(null);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [contextMenuChar, setContextMenuChar] = useState<IChar | null>(null);
 
-  const addChar = async () => {
-    if (formRef.current) {
-      const data = new FormData(formRef.current);
-      const formData: { [key: string]: string } = {};
-      data.forEach((value, key) => {
-        formData[key] = value as string;
-      });
-      console.log(...Object.values(formData));
-      const success = await addNewCharacter(
-        formData[`${EAddCharInputs.NAME_INPUT}`],
-        formData[`${EAddCharInputs.SERV_INPUT}`],
-        formData[`${EAddCharInputs.FRACT_INPUT}`],
-        null,
-      );
-      if (success) {
-        charsStore.getChars();
-      }
+  const addChar = async (
+    charName: string,
+    server: string,
+    fraction: string,
+    portrait: string | null,
+  ) => {
+    const success = await addNewCharacter(charName, server, fraction, portrait);
+    if (success) {
+      charsStore.getChars();
     }
     setShowAddModal(false);
   };
+
+  const updateChar = async (
+    charName: string,
+    server: string,
+    fraction: string,
+    portrait: string | null,
+    id: string | undefined,
+  ) => {
+    if (id) {
+      const success = await updateCharacter(id, charName, server, fraction, portrait);
+      if (success) {
+        console.log('success', success);
+        charsStore.getChars();
+      }
+    }
+  };
+
   const handleCharSelect = (char: IChar) => {
     if (stat) charsStore.selectChar(char);
     else charsStore.setSelectedSingleChar(char);
   };
   const handleContextMenu = (char: IChar, eventKey: string) => {
-    console.log('openContextMenu ', contextMenuChar);
-    console.log('eventKey ', eventKey);
-    setOpenContextMenu(null);
+    if (eventKey === 'update') {
+      setShowUpdateModal(true);
+    }
+    setContextMenuChar(null);
   };
 
   const bgColor = useCallback(
@@ -85,18 +88,15 @@ function CharsContainer({ stat }: { stat: boolean }) {
   return (
     <div className='char-container'>
       {chars.map((ch) => (
-        <div className='card-container' onMouseLeave={() => setOpenContextMenu(null)}>
+        <div className='card-container' onMouseLeave={() => setContextMenuChar(null)} key={ch.id}>
           <Card
-            key={ch.id}
             className='char-card'
             style={{
               borderColor: `${ch.fraction === 'horde' ? 'red' : 'lightBlue'}`,
               background: `${bgColor(ch)}`,
             }}
             onClick={(e) => {
-              console.log('e.target', e.currentTarget);
               if (!(e.target as HTMLElement).classList.contains('drop-indicator')) {
-                console.log('!contains');
                 handleCharSelect(ch);
               }
             }}>
@@ -110,7 +110,7 @@ function CharsContainer({ stat }: { stat: boolean }) {
           <div
             className='bg-secondary1 position-absolute char-drop-indicator'
             onClick={() => {
-              setOpenContextMenu(ch);
+              setContextMenuChar(ch);
             }}>
             <img style={{ width: '50%', paddingBottom: '8px' }} src={dropDownIcon}></img>
           </div>
@@ -123,82 +123,24 @@ function CharsContainer({ stat }: { stat: boolean }) {
           )}
         </div>
       ))}
-
       <AddCardBtn handleClick={() => setShowAddModal(true)} size='40px' text='+' />
-      <Modal show={showAddModal} onHide={() => setShowAddModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add new character</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form
-            ref={formRef}
-            className='d-flex flex-column align-content-center'
-            onSubmit={handleSubmit(addChar)}>
-            <Form.Group className='mb-3 d-flex flex-column align-content-center'>
-              <Form.Label className='align-self-center'>Character's name</Form.Label>
-              <Form.Control
-                type='text'
-                placeholder='Name'
-                {...register(`${EAddCharInputs.NAME_INPUT}`, {
-                  required: true,
-                  pattern: /^[A-Za-z]+$/i,
-                })}
-                aria-invalid={errors[`${EAddCharInputs.NAME_INPUT}`] ? 'true' : 'false'}
-              />
-              {errors[`${EAddCharInputs.NAME_INPUT}`]?.type === 'required' && (
-                <p role='alert' className='align-self-end fs-7 fst-italic text-danger'>
-                  Name is required
-                </p>
-              )}
-              {errors[`${EAddCharInputs.NAME_INPUT}`]?.type === 'pattern' && (
-                <p role='alert' className='align-self-end fs-7 fst-italic text-danger'>
-                  Only letters are allowed
-                </p>
-              )}
-            </Form.Group>
-            <Form.Group className='mb-3 d-flex flex-column align-content-center'>
-              <Form.Label className='align-self-center'>Character's server</Form.Label>
-              <Form.Control
-                type='text'
-                placeholder='Server'
-                {...register(`${EAddCharInputs.SERV_INPUT}`, {
-                  required: true,
-                  pattern: /^[A-Za-z]+$/i,
-                })}
-                aria-invalid={errors[`${EAddCharInputs.SERV_INPUT}`] ? 'true' : 'false'}
-              />
-              {errors[`${EAddCharInputs.SERV_INPUT}`]?.type === 'required' && (
-                <p role='alert' className='align-self-end fs-7 fst-italic text-danger'>
-                  Name is required
-                </p>
-              )}
-              {errors[`${EAddCharInputs.SERV_INPUT}`]?.type === 'pattern' && (
-                <p role='alert' className='align-self-end fs-7 fst-italic text-danger'>
-                  Only letters are allowed
-                </p>
-              )}
-            </Form.Group>
-            <Form.Group className='mb-3 d-flex flex-column align-content-center'>
-              <Form.Label className='align-self-center'>Character's fraction</Form.Label>
-              <Form.Select
-                aria-label='horde'
-                className='w-50 align-self-center'
-                {...register(`${EAddCharInputs.FRACT_INPUT}`, { required: true })}>
-                <option value='horde'>Horde</option>
-                <option value='aliance'>Aliance</option>
-              </Form.Select>
-            </Form.Group>
-            <div className="'mb-3 d-flex flex-row justify-content-end gap-2">
-              <Button variant='outline-secondary' onClick={() => setShowAddModal(false)}>
-                Close
-              </Button>
-              <Button variant='secondary' type='submit'>
-                Save
-              </Button>
-            </div>
-          </Form>
-        </Modal.Body>
-      </Modal>
+      <CharFormModal
+        show={showAddModal}
+        action={'add'}
+        handleForm={addChar}
+        closeForm={() => {
+          setShowAddModal(false);
+        }}
+      />
+      <CharFormModal
+        show={showUpdateModal}
+        action={'update'}
+        char={contextMenuChar}
+        handleForm={updateChar}
+        closeForm={() => {
+          setShowUpdateModal(false);
+        }}
+      />
     </div>
   );
 }

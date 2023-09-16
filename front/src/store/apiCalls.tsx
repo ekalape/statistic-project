@@ -57,7 +57,31 @@ export async function addNewCharacter(
     });
     return res.ok;
   } catch (err) {
-    console.log('err', err);
+    if (err instanceof Error) console.log('add error', err.message);
+    return false;
+  }
+}
+
+export async function updateCharacter(
+  id: string,
+  name: string,
+  server: string,
+  fraction: string,
+  portrait: string | null,
+) {
+  try {
+    const res = await fetch(baseURL + 'chars/' + id, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({ name, server, fraction, portrait }),
+    });
+    return res.ok;
+  } catch (err) {
+    if (err instanceof Error) {
+      console.log('update error', err.message);
+    }
     return false;
   }
 }
