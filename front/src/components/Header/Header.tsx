@@ -12,7 +12,7 @@ const displayedToday = new Date();
 function Header() {
   const loc = useLocation();
   const getPathname = loc.pathname;
-  //const lastDestination = getPathname === '/stats' ? 'Statistics' : 'Add earning';
+
   const [destination, setDestination] = useState(
     getPathname === '/stats' ? 'Statistics' : 'Add earning',
   );
@@ -28,11 +28,9 @@ function Header() {
 
   useEffect(() => {
     setDestination(loc.pathname === '/stats' ? 'Statistics' : 'Add earning');
-    console.log('loc', loc);
   }, [loc]);
   useEffect(() => {
     setLogoName(destination);
-    console.log('destination', destination);
   }, [destination]);
 
   return (

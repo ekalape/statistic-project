@@ -34,15 +34,7 @@ const DateChooser = memo((props: DateChooserType) => {
         onClick={() => setShowChangeDate((prev) => !prev)}>
         <i>{label}</i> <b>{day.toLocaleDateString()}</b>
       </Button>
-      {showChangeDate && (
-        <DatePicker selected={today} onChange={(e) => changeDate(e)} inline />
-        /*  <input
-          type='Date'
-          className={`ps-2 pe-2 border border-secondary rounded text-info bg-primary-subtle ${
-            size === 'sm' ? 'position-absolute top-110 ' : 'position-absolute bottom-110'
-          }`}
-          onChange={(e) => changeDate(e.currentTarget?.value)}></input> */
-      )}
+      {showChangeDate && <DatePicker selected={today} onChange={(e) => changeDate(e)} inline />}
     </div>
   );
 });

@@ -1,4 +1,4 @@
-import { Button, Container, Form, Toast } from 'react-bootstrap';
+import { Button, Container, Form } from 'react-bootstrap';
 import { ServerContainer } from '../ServerContainer';
 import './style.scss';
 import { useEffect, useState } from 'react';
@@ -53,6 +53,8 @@ function AddEarnContainer() {
           setShowErrorToast(true);
         }
       }
+    } else if (profit && !selChar) {
+      setShowErrorToast(true);
     }
   };
 
@@ -75,7 +77,6 @@ function AddEarnContainer() {
         type='one'
         handleServerChange={(value) => {
           setSelServer(value);
-          console.log('server -> ', value);
         }}
       />
       <Form
@@ -119,7 +120,6 @@ function AddEarnContainer() {
           Submit
         </Button>
       </Form>
-      <div>{selChar?.earnings?.reduce((acc, val) => acc + (+val.amount || 0), 0)}</div>
       <InfoToast
         show={showToast}
         text={`Your earning for ${selChar?.name} was succesfully added!`}
@@ -128,7 +128,11 @@ function AddEarnContainer() {
       />
       <InfoToast
         show={showErrorToast}
-        text={`Your earning for ${selChar?.name} was not added!`}
+        text={
+          selChar
+            ? `Your earning for ${selChar?.name} was not added!`
+            : `You have to choose a character!`
+        }
         success={false}
         handleCloseToast={() => setShowErrorToast(false)}
       />

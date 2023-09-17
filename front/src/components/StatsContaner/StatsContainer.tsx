@@ -54,17 +54,22 @@ function StatsContainer() {
   }, [store.selectedChars]);
 
   useEffect(() => {
-    getAllProfits(fromDay, toDay, store.selectedChars).then((data) => {
-      //table
-      const charsDataArray = groupBy(data, 'belongTo');
-      const mapped = lodashMap(charsDataArray, (group, _) => ({
-        charname: group[0].char?.name,
-        profit: sumBy(group, 'amount'),
-      }));
-      setFullProfitTable(mapped);
+    if (store.selectedChars.length === 0) {
+      setFullProfit(0);
+      setFullProfitTable([]);
+    } else {
+      getAllProfits(fromDay, toDay, store.selectedChars).then((data) => {
+        //table
+        const charsDataArray = groupBy(data, 'belongTo');
+        const mapped = lodashMap(charsDataArray, (group, _) => ({
+          charname: group[0].char?.name,
+          profit: sumBy(group, 'amount'),
+        }));
+        setFullProfitTable(mapped);
 
-      setFullProfit(data.reduce((acc, p) => acc + p.amount, 0));
-    });
+        setFullProfit(data.reduce((acc, p) => acc + p.amount, 0));
+      });
+    }
   }, [store.selectedChars, fromDay, toDay]);
 
   return (

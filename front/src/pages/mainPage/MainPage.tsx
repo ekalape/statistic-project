@@ -7,7 +7,6 @@ function MainPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(' inside mainpage pathloc --> ', pathloc);
     if (pathloc.pathname === '/') navigate('/add');
   }, [pathloc]);
   return (

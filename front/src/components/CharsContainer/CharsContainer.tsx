@@ -114,9 +114,6 @@ function CharsContainer({ stat }: { stat: boolean }) {
   useEffect(() => {
     charsStore.getChars();
   }, []);
-  useEffect(() => {
-    console.log('contextMenuChar', contextMenuChar);
-  }, [contextMenuChar]);
 
   return (
     <>
