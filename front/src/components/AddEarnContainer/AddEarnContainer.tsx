@@ -6,6 +6,7 @@ import { useCharsStore } from '../../store/store';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { DateChooser } from '../DateChooser';
 import { addNewEarning } from '../../store/apiCalls';
+import { InfoToast } from '../InfoToast';
 
 const today = new Date();
 
@@ -19,6 +20,7 @@ function AddEarnContainer() {
   const updateSelectedChar = useCharsStore((state) => state.updateSelectedChar);
 
   const [showToast, setShowToast] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
 
   const [selServer, setSelServer] = useState(selChar?.server || 'all');
   const [showDateField, setShowDateField] = useState(false);
@@ -45,9 +47,10 @@ function AddEarnContainer() {
         const success = await addNewEarning(selChar.id, day, +profit);
         if (success) {
           setShowToast(true);
-          await updateSelectedChar(selChar.id);
+          updateSelectedChar(selChar.id);
         } else {
           console.log('Bad request');
+          setShowErrorToast(true);
         }
       }
     }
@@ -69,7 +72,7 @@ function AddEarnContainer() {
       className='border-top border-secondary1 flex-grow-1 d-flex flex-column align-items-center '>
       <ServerContainer
         selectedServer={selServer}
-        type="one"
+        type='one'
         handleServerChange={(value) => {
           setSelServer(value);
           console.log('server -> ', value);
@@ -117,20 +120,18 @@ function AddEarnContainer() {
         </Button>
       </Form>
       <div>{selChar?.earnings?.reduce((acc, val) => acc + (+val.amount || 0), 0)}</div>
-      {showToast && (
-        <Toast
-          show={showToast}
-          onClose={() => setShowToast(false)}
-          autohide={true}
-          delay={2000}
-          bg={'success'}>
-          <Toast.Header>
-            <img src='holder.js/20x20?text=%20' className='rounded me-2' alt='' />
-            <strong className='me-auto'>Success!</strong>
-          </Toast.Header>
-          <Toast.Body>Your earning for {selChar?.name} was succesfully added!</Toast.Body>
-        </Toast>
-      )}
+      <InfoToast
+        show={showToast}
+        text={`Your earning for ${selChar?.name} was succesfully added!`}
+        success={true}
+        handleCloseToast={() => setShowToast(false)}
+      />
+      <InfoToast
+        show={showErrorToast}
+        text={`Your earning for ${selChar?.name} was not added!`}
+        success={false}
+        handleCloseToast={() => setShowErrorToast(false)}
+      />
     </Container>
   );
 }

@@ -20,6 +20,12 @@ const useCharsStore = create<ICharsStore>()(
         set({ selectedChars: newchars });
       },
 
+      deleteOneFromSelected: (selChar: IChar | null) => {
+        set((state) => ({
+          selectedChars: state.selectedChars.filter((sc) => sc.id !== selChar?.id),
+        }));
+      },
+
       selectChar: (selChar: IChar | null) => {
         if (selChar === null) set({ selectedSingleChar: null });
         else {

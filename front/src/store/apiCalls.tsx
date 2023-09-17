@@ -86,8 +86,23 @@ export async function updateCharacter(
   }
 }
 
+export async function deleteCharacter(id: string) {
+  console.log('id inside delete fn ----> ', id);
+  try {
+    const res = await fetch(baseURL + 'chars/' + id, {
+      method: 'DELETE',
+      headers: {
+        'Content-type': 'application/json',
+      },
+    });
+    return res.ok;
+  } catch (err) {
+    if (err instanceof Error) console.log('delete error ', err.message);
+    return false;
+  }
+}
+
 export async function addNewEarning(charId: string, date: Date, amount: number) {
-  console.log('date inside apicall -> ', date);
   try {
     const res = await fetch(baseURL + 'stats', {
       method: 'POST',

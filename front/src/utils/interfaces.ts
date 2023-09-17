@@ -31,6 +31,7 @@ export interface ICharsStore {
     setSelectedSingleChar: (char: IChar | null) => void
     setTimeSign: (sign: Date) => void
     updateSelectedChar: (charId: string) => void
+    deleteOneFromSelected: (selChar: IChar | null) => void
 
 
 

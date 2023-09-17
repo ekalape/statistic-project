@@ -7,10 +7,12 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { IChar } from '../../utils/interfaces';
 import { AddCardBtn } from '../AddCardBtn';
-import { addNewCharacter, updateCharacter } from '../../store/apiCalls';
+import { addNewCharacter, deleteCharacter, updateCharacter } from '../../store/apiCalls';
 import dropDownIcon from '../../assets/drop-down-icon-pink.png';
 import { DropDownCharMenu } from '../DropDownCharMenu';
 import CharFormModal from './CharFormModal';
+import { ConfirmModal } from '../ConfirmModal';
+import { InfoToast } from '../InfoToast';
 
 function CharsContainer({ stat }: { stat: boolean }) {
   const charsStore = useCharsStore();
@@ -22,7 +24,11 @@ function CharsContainer({ stat }: { stat: boolean }) {
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [contextMenuChar, setContextMenuChar] = useState<IChar | null>(null);
+
+  const [openSuccessToast, setOpenSuccessToast] = useState<string | null>(null);
+  const [openErrorToast, setOpenErrorToast] = useState<string | null>(null);
 
   const addChar = async (
     charName: string,
@@ -32,7 +38,10 @@ function CharsContainer({ stat }: { stat: boolean }) {
   ) => {
     const success = await addNewCharacter(charName, server, fraction, portrait);
     if (success) {
+      setOpenSuccessToast('add');
       charsStore.getChars();
+    } else {
+      setOpenErrorToast('add');
     }
     setShowAddModal(false);
   };
@@ -47,8 +56,10 @@ function CharsContainer({ stat }: { stat: boolean }) {
     if (id) {
       const success = await updateCharacter(id, charName, server, fraction, portrait);
       if (success) {
-        console.log('success', success);
+        setOpenSuccessToast('update');
         charsStore.getChars();
+      } else {
+        setOpenErrorToast('update');
       }
     }
   };
@@ -57,11 +68,30 @@ function CharsContainer({ stat }: { stat: boolean }) {
     if (stat) charsStore.selectChar(char);
     else charsStore.setSelectedSingleChar(char);
   };
-  const handleContextMenu = (char: IChar, eventKey: string) => {
+  const handleContextMenu = (eventKey: string) => {
     if (eventKey === 'update') {
       setShowUpdateModal(true);
+    } else if (eventKey === 'delete') {
+      setShowConfirmModal(true);
     }
     setContextMenuChar(null);
+  };
+
+  const deleteChar = async (char: IChar | undefined | null) => {
+    if (char) {
+      const success = await deleteCharacter(char.id);
+      if (success) {
+        setOpenSuccessToast('delete');
+        charsStore.deleteOneFromSelected(char);
+        if (charsStore.selectedSingleChar?.id === char.id) {
+          charsStore.setSelectedSingleChar(null);
+        }
+        charsStore.getChars();
+      } else {
+        setOpenErrorToast('add');
+      }
+      setShowConfirmModal(false);
+    }
   };
 
   const bgColor = useCallback(
@@ -84,64 +114,99 @@ function CharsContainer({ stat }: { stat: boolean }) {
   useEffect(() => {
     charsStore.getChars();
   }, []);
+  useEffect(() => {
+    console.log('contextMenuChar', contextMenuChar);
+  }, [contextMenuChar]);
 
   return (
-    <div className='char-container'>
-      {chars.map((ch) => (
-        <div className='card-container' onMouseLeave={() => setContextMenuChar(null)} key={ch.id}>
-          <Card
-            className='char-card'
-            style={{
-              borderColor: `${ch.fraction === 'horde' ? 'red' : 'lightBlue'}`,
-              background: `${bgColor(ch)}`,
-            }}
-            onClick={(e) => {
-              if (!(e.target as HTMLElement).classList.contains('drop-indicator')) {
-                handleCharSelect(ch);
-              }
-            }}>
-            <Card.Img
-              variant='top'
-              src={ch.fraction === 'horde' ? hordeIcon : alianceIcon}
-              style={{ width: '50px', height: '50px' }}
-            />
-            <Card.Text style={{ fontSize: '0.8rem' }}>{ch.name}</Card.Text>
-          </Card>
-          <div
-            className='bg-secondary1 position-absolute char-drop-indicator'
-            onClick={() => {
-              setContextMenuChar(ch);
-            }}>
-            <img style={{ width: '50%', paddingBottom: '8px' }} src={dropDownIcon}></img>
+    <>
+      <div className='char-container'>
+        <ConfirmModal
+          show={showConfirmModal}
+          char={contextMenuChar}
+          handleConfirmFrame={deleteChar}
+          handleClose={() => setShowConfirmModal(false)}
+        />
+
+        {chars.map((ch) => (
+          <div className='card-container' onMouseLeave={() => setContextMenuChar(null)} key={ch.id}>
+            <Card
+              className='char-card'
+              style={{
+                borderColor: `${ch.fraction === 'horde' ? 'red' : 'lightBlue'}`,
+                background: `${bgColor(ch)}`,
+              }}
+              onClick={(e) => {
+                if (!(e.target as HTMLElement).classList.contains('drop-indicator')) {
+                  handleCharSelect(ch);
+                }
+              }}>
+              <Card.Img
+                variant='top'
+                src={ch.fraction === 'horde' ? hordeIcon : alianceIcon}
+                style={{ width: '50px', height: '50px' }}
+              />
+              <Card.Text style={{ fontSize: '0.8rem' }}>{ch.name}</Card.Text>
+            </Card>
+            <div
+              className='bg-secondary1 position-absolute char-drop-indicator'
+              onClick={() => {
+                setContextMenuChar(ch);
+              }}>
+              <img style={{ width: '50%', paddingBottom: '8px' }} src={dropDownIcon}></img>
+            </div>
+            {contextMenuChar && (
+              <DropDownCharMenu
+                show={contextMenuChar && contextMenuChar.id === ch.id ? true : false}
+                handleContextMenu={handleContextMenu}
+              />
+            )}
           </div>
-          {contextMenuChar && (
-            <DropDownCharMenu
-              show={contextMenuChar && contextMenuChar.id === ch.id ? true : false}
-              char={ch}
-              handleContectMenu={handleContextMenu}
-            />
-          )}
-        </div>
-      ))}
-      <AddCardBtn handleClick={() => setShowAddModal(true)} size='40px' text='+' />
-      <CharFormModal
-        show={showAddModal}
-        action={'add'}
-        handleForm={addChar}
-        closeForm={() => {
-          setShowAddModal(false);
-        }}
+        ))}
+        <AddCardBtn handleClick={() => setShowAddModal(true)} size='40px' text='+' />
+        <CharFormModal
+          show={showAddModal}
+          action={'add'}
+          handleForm={addChar}
+          closeForm={() => {
+            setShowAddModal(false);
+          }}
+        />
+        <CharFormModal
+          show={showUpdateModal}
+          action={'update'}
+          char={contextMenuChar}
+          handleForm={updateChar}
+          closeForm={() => {
+            setShowUpdateModal(false);
+          }}
+        />
+      </div>
+      <InfoToast
+        show={!!openSuccessToast}
+        text={
+          openSuccessToast === 'add'
+            ? `Your character was succesfully created!`
+            : openSuccessToast === 'update'
+            ? `Your character was succesfully updated!`
+            : `Your character was succesfully deleted!`
+        }
+        success={true}
+        handleCloseToast={() => setOpenSuccessToast(null)}
       />
-      <CharFormModal
-        show={showUpdateModal}
-        action={'update'}
-        char={contextMenuChar}
-        handleForm={updateChar}
-        closeForm={() => {
-          setShowUpdateModal(false);
-        }}
+      <InfoToast
+        show={!!openErrorToast}
+        text={
+          openErrorToast === 'add'
+            ? `Your character was not created`
+            : openErrorToast === 'update'
+            ? `Your character was not updated`
+            : `Your character was not deleted`
+        }
+        success={false}
+        handleCloseToast={() => setOpenErrorToast(null)}
       />
-    </div>
+    </>
   );
 }
 
