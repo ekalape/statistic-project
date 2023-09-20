@@ -1,6 +1,7 @@
 import { Modal, Button, Table } from 'react-bootstrap';
 import { IChar } from '../../utils/interfaces';
 import { useEffect, useRef } from 'react';
+import { getOneCharacter } from '../../store/apiCalls';
 
 type DetailsPropsType = {
   show: boolean;
@@ -12,12 +13,14 @@ type DetailsPropsType = {
 function DetailsModal(props: DetailsPropsType) {
   const { show, handleDetailsFrame, handleClose, char } = props;
   const currectChar = useRef(char);
+  const currectProfits = useRef<{ date: string; amount: number }[]>();
 
   useEffect(() => {
     if (char) {
       currectChar.current = char;
-      const profits = char.earnings;
-      console.log(profits);
+      getCharProfits(char.id).then((data) => {
+        currectProfits.current = data;
+      });
     }
   }, [char]);
 
@@ -37,7 +40,7 @@ function DetailsModal(props: DetailsPropsType) {
         <div className='fs-7 d-flex flex-column align-items-center p-1'>
           <Table striped className='w-75 '>
             <tbody>
-              {currectChar.current?.earnings.map((pr, idx) => {
+              {currectProfits.current?.map((pr, idx) => {
                 const day = new Date(pr.date).toLocaleDateString();
 
                 return (
@@ -63,3 +66,18 @@ function DetailsModal(props: DetailsPropsType) {
 }
 
 export default DetailsModal;
+
+export async function getCharProfits(charId: string) {
+  const char: IChar | {} = await getOneCharacter(charId);
+  if (!('earnings' in char)) throw new Error('Unknown character');
+
+  const profitMap = new Map<string, number>();
+
+  char.earnings.forEach((ch) => {
+    if (profitMap.has(ch.date)) {
+      profitMap.set(ch.date, profitMap.get(ch.date)! + ch.amount);
+    } else profitMap.set(ch.date, ch.amount || 0);
+  });
+
+  return Array.from(profitMap.entries()).map(([date, amount]) => ({ date, amount }));
+}
