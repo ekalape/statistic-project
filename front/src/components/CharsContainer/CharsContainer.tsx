@@ -13,6 +13,7 @@ import { DropDownCharMenu } from '../DropDownCharMenu';
 import CharFormModal from './CharFormModal';
 import { ConfirmModal } from '../ConfirmModal';
 import { InfoToast } from '../InfoToast';
+import { DetailsModal } from '../DetailsModal';
 
 function CharsContainer({ stat }: { stat: boolean }) {
   const charsStore = useCharsStore();
@@ -25,6 +26,7 @@ function CharsContainer({ stat }: { stat: boolean }) {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [contextMenuChar, setContextMenuChar] = useState<IChar | null>(null);
 
   const [openSuccessToast, setOpenSuccessToast] = useState<string | null>(null);
@@ -73,6 +75,8 @@ function CharsContainer({ stat }: { stat: boolean }) {
       setShowUpdateModal(true);
     } else if (eventKey === 'delete') {
       setShowConfirmModal(true);
+    } else if (eventKey === 'details') {
+      setShowDetailsModal(true);
     }
     setContextMenuChar(null);
   };
@@ -123,6 +127,15 @@ function CharsContainer({ stat }: { stat: boolean }) {
           char={contextMenuChar}
           handleConfirmFrame={deleteChar}
           handleClose={() => setShowConfirmModal(false)}
+        />
+        <DetailsModal
+          show={showDetailsModal}
+          char={contextMenuChar}
+          handleDetailsFrame={() => {
+            console.log('handling contextMenuChar -->', contextMenuChar);
+            setShowDetailsModal(false);
+          }}
+          handleClose={() => setShowDetailsModal(false)}
         />
 
         {chars.map((ch) => (

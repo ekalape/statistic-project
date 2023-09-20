@@ -15,6 +15,9 @@ function DropDownCharMenu(props: DropDownPropsType) {
         show={show}
         onSelect={(eventKey: any) => handleContextMenu(eventKey)}>
         <Dropdown.Menu className='drop-down-char-menu'>
+          <Dropdown.Item eventKey='details' as='button'>
+            Details
+          </Dropdown.Item>
           <Dropdown.Item eventKey='update' as='button'>
             Update
           </Dropdown.Item>

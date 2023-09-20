@@ -106,7 +106,7 @@ function AddEarnContainer() {
             placeholder='Enter sum'
             {...register('profit', {
               required: true,
-              pattern: /^[0-9]+$/i,
+              pattern: /^\-?[0-9]+$/i,
             })}
             aria-invalid={errors.profit ? 'true' : 'false'}
           />
